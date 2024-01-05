@@ -10,8 +10,9 @@ export class RegisterPage extends Component {
 
         this.state = {
             name: '',
+            surname: '',
+            patronymic: '',
             email: '',
-            phone: '',
             password: '',
             confirmPassword: '',
             errorMessage: null,
@@ -26,10 +27,10 @@ export class RegisterPage extends Component {
     handleSubmit = async (event) => {
         event.preventDefault();
 
-        const { name, email, phone, password, confirmPassword } = this.state;
+        const { name, surname, patronymic, email, password, confirmPassword } = this.state;
 
         // Проверка наличия введенных данных
-        if (!name || !email || !phone || !password || !confirmPassword) {
+        if (!name || !surname || !patronymic || !email || !password || !confirmPassword) {
             this.setState({ errorMessage: 'Пожалуйста, заполните все поля' });
             return;
         }
@@ -54,7 +55,7 @@ export class RegisterPage extends Component {
             return;
         }
 
-        sendRequest("/api/User/Register", "POST", { name, email, phone, password }, null)
+        sendRequest("/api/User/Register", "POST", { name, surname, patronymic, email, password }, null)
             .then(response => {
                 // Проверка успешного ответа
                 if (response.message) {
@@ -81,7 +82,7 @@ export class RegisterPage extends Component {
         sendRequest('/api/User/GetUsers', 'GET', null, null).then(n => { console.log(n); this.setState({ Users: n }) });        
     }
     render() {
-        const { name, email, phone, password, confirmPassword, errorMessage, Users } = this.state;
+        const { name, surname, patronymic, email, password, confirmPassword, errorMessage } = this.state;
 
         return (
             <div>
@@ -96,20 +97,28 @@ export class RegisterPage extends Component {
                     />
                     <input
                         className="input"
+                        type="text"
+                        name="surname"
+                        placeholder="Ваша фамилия"
+                        value={surname}
+                        onChange={this.handleInputChange}
+                    />
+                    <input
+                        className="input"
+                        type="text"
+                        name="patronymic"
+                        placeholder="Ваше отчество"
+                        value={patronymic}
+                        onChange={this.handleInputChange}
+                    />
+                    <input
+                        className="input"
                         type="email"
                         name="email"
                         placeholder="Ваш e-mail"
                         value={email}
                         onChange={this.handleInputChange}
-                    />
-                    <input
-                        className="input"
-                        type="tel"
-                        name="phone"
-                        placeholder="Ваш телефон"
-                        value={phone}
-                        onChange={this.handleInputChange}
-                    />
+                    />                    
                     <input
                         className="input"
                         type="password"

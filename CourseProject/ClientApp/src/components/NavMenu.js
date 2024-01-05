@@ -33,19 +33,19 @@ export class NavMenu extends Component {
                 (
                         <div className="auth-buttons">
                             <Link className="text-dark" to="/user/UserProfilePage">
-                                <button>Мой профиль</button>
+                                <button>РњРѕР№ РїСЂРѕС„РёР»СЊ</button>
                             </Link>
                             <Link className="text-dark" to="/">
-                                <button onClick={this.singOut}>Выход</button>
+                                <button onClick={this.singOut}>Р’С‹С…РѕРґ</button>
                             </Link>
                         </div>
                 ) : (
                         <div className="auth-buttons">
                             <Link className="text-dark" to="/Authentication/RegisterPage">
-                                <button>Регистрация</button>
+                                <button>Р РµРіРёСЃС‚СЂР°С†РёСЏ</button>
                             </Link>
                             <Link className="text-dark" to="/Authentication/LoginPage">
-                                <button>Войти</button>
+                                <button>Р’РѕР№С‚Рё</button>
                             </Link>
                         </div> 
                 )}

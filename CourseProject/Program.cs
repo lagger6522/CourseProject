@@ -1,8 +1,26 @@
+using CourseProject.Model;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.EntityFrameworkCore;
+
+
 var builder = WebApplication.CreateBuilder(args);
-
+var config = new ConfigurationBuilder()
+			.SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+			.AddJsonFile("appsettings.json").Build();
+builder.Services.AddAuthorization();
+builder.Services.AddDbContext<QueuedbContext>(options =>
+				options.UseSqlServer(config.GetConnectionString("ConnectionMSSQLServer")));
 // Add services to the container.
-
 builder.Services.AddControllersWithViews();
+builder.Services.AddAuthentication(options =>
+{
+	options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+})
+.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+{
+	options.ExpireTimeSpan = TimeSpan.FromDays(5);
+});
 
 var app = builder.Build();
 
@@ -17,11 +35,19 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllerRoute(
 	name: "default",
-	pattern: "{controller}/{action=Index}/{id?}");
+	pattern: "api/{controller}/{action}");
 
+
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+	MinimumSameSitePolicy = SameSiteMode.Lax,
+	HttpOnly = HttpOnlyPolicy.Always,
+	Secure = CookieSecurePolicy.Always
+});
 app.MapFallbackToFile("index.html");
 
 app.Run();
