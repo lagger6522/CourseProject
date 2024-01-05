@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './AdminCDocPage.css';
 
 export class AdminCDocPage extends Component {
@@ -12,11 +13,19 @@ export class AdminCDocPage extends Component {
 
     render() {
         return (
-            <div className="column-container">
-                <button className="button">Добавить главврача</button>
-                <button className="button">Изменить данные главврача</button>
-                <button className="button">Удалить главврача</button>
-                <button className="button">Список главврачей</button>
+            <div className="button-container">
+                <Link to="/administrator/AddCDocPage" className="admin-button-link">
+                    <button className="admin-button">Добавить главврача</button>
+                </Link>
+                <Link to="/administrator/AltCDocPage" className="admin-button-link">
+                    <button className="admin-button">Изменить данные главврача</button>
+                </Link>
+                <Link to="/administrator/DelCDocPage" className="admin-button-link">
+                    <button className="admin-button">Удалить главврача</button>
+                </Link>
+                <Link to="/administrator/SelCDocPage" className="admin-button-link">
+                    <button className="admin-button">Список главврачей</button>
+                </Link>
                 <button className="admin-corner-button">&#8606;</button>
             </div>
         );
