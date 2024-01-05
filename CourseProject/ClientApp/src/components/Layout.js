@@ -3,7 +3,11 @@ import { Container } from 'reactstrap';
 import { NavMenu } from './NavMenu';
 
 export class Layout extends Component {
-  static displayName = Layout.name;
+    static displayName = Layout.name;
+
+    getPath() {
+        return window.location.href.replace(window.location.protocol + "//" + window.location.host, "");
+    }
 
   render() {
     return (
