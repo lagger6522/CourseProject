@@ -148,9 +148,6 @@ namespace Store.controllers
 			// Создание нового пользователя
 			var user = new User
 			{
-				Name = model.Name,
-				Surname = model.Surname,
-				Patronymic = model.Patronymic,
 				Email = model.Email,
 				Password = HashPassword(model.Password)
 			};

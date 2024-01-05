@@ -9,9 +9,6 @@ export class RegisterPage extends Component {
         super(props);
 
         this.state = {
-            name: '',
-            surname: '',
-            patronymic: '',
             email: '',
             password: '',
             confirmPassword: '',
@@ -27,10 +24,10 @@ export class RegisterPage extends Component {
     handleSubmit = async (event) => {
         event.preventDefault();
 
-        const { name, surname, patronymic, email, password, confirmPassword } = this.state;
+        const { email, password, confirmPassword } = this.state;
 
         // Проверка наличия введенных данных
-        if (!name || !surname || !patronymic || !email || !password || !confirmPassword) {
+        if (!email || !password || !confirmPassword) {
             this.setState({ errorMessage: 'Пожалуйста, заполните все поля' });
             return;
         }
@@ -55,7 +52,7 @@ export class RegisterPage extends Component {
             return;
         }
 
-        sendRequest("/api/User/Register", "POST", { name, surname, patronymic, email, password }, null)
+        sendRequest("/api/User/Register", "POST", { email, password }, null)
             .then(response => {
                 // Проверка успешного ответа
                 if (response.message) {
@@ -82,35 +79,11 @@ export class RegisterPage extends Component {
         sendRequest('/api/User/GetUsers', 'GET', null, null).then(n => { console.log(n); this.setState({ Users: n }) });        
     }
     render() {
-        const { name, surname, patronymic, email, password, confirmPassword, errorMessage } = this.state;
+        const { email, password, confirmPassword, errorMessage } = this.state;
 
         return (
             <div>
-                <form className="form" onSubmit={this.handleSubmit}>
-                    <input
-                        className="input"
-                        type="text"
-                        name="name"
-                        placeholder="Ваше имя"
-                        value={name}
-                        onChange={this.handleInputChange}
-                    />
-                    <input
-                        className="input"
-                        type="text"
-                        name="surname"
-                        placeholder="Ваша фамилия"
-                        value={surname}
-                        onChange={this.handleInputChange}
-                    />
-                    <input
-                        className="input"
-                        type="text"
-                        name="patronymic"
-                        placeholder="Ваше отчество"
-                        value={patronymic}
-                        onChange={this.handleInputChange}
-                    />
+                <form className="form" onSubmit={this.handleSubmit}>                  
                     <input
                         className="input"
                         type="email"
