@@ -78,9 +78,7 @@ export class RegisterPage extends Component {
                 }
             });            
     };  
-    GetAllUsers() {
-        sendRequest('/api/User/GetUsers', 'GET', null, null).then(n => { console.log(n); this.setState({ Users: n }) });        
-    }
+
     render() {
         const { name, surname, patronymic, email, password, confirmPassword, errorMessage } = this.state;
 
