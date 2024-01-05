@@ -1,4 +1,4 @@
-body {
+.body {
     font-family: Arial, sans-serif;
     font-size: 20px;
     color: #000;
@@ -11,27 +11,41 @@ body {
 
 .button-container {
     display: flex;
+    flex-direction: column; /* Изменено на "column" */
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
 
-.button-container .button {
-    margin: 0 10px;
-    padding: 10% 15%; /* Измененные отступы в процентах */
-    border: 0;
-    background-color: #ffcc99;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 48px;
-    color: #000;
-    border-radius: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: color 0.3s ease;
-}
+    .button-container .admin-button-link {
+        margin: 10px 0; /* Изменено на "10px 0" */
+        text-decoration: none;
+    }
 
-.button-container .button:hover {
-    background-color: #e38c3b;
-    color: #fff;
-}
-    
+    .button-container .admin-button {
+        padding: 30px 60px;
+        border: 0;
+        background-color: #ffcc99;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 28px;
+        color: #000;
+        border-radius: 16px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s ease, color 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 600px; /* Установите фиксированную ширину */
+        height: 300px;
+    }
+
+        .button-container .admin-button:not(:last-child) {
+            margin-bottom: 10px; /* Изменено на "10px" */
+        }
+
+        .button-container .admin-button:hover {
+            background-color: #e38c3b;
+            color: #fff;
+        }

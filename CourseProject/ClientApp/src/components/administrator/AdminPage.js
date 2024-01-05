@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './AdminPage.css';
-import sendRequest from '../SendRequest';
 
 export class AdminPage extends Component {
     constructor(props) {
@@ -11,12 +11,15 @@ export class AdminPage extends Component {
         };
     }
 
-
     render() {
         return (
-            <div class="button-container">
-                <button class="button">Кнопка 1</button>
-                <button class="button">Кнопка 2</button>
+            <div className="button-container">
+                <Link to="/administrator/AdminPolyPage" className="admin-button-link">
+                    <button className="admin-button">Поликлиники</button>
+                </Link>
+                <Link to="/administrator/AdminCDocPage" className="admin-button-link">
+                    <button className="admin-button">Главврачи</button>
+                </Link>
             </div>
         );
     }

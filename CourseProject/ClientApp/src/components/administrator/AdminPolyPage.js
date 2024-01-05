@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import './AdminPage.css';
-import sendRequest from '../SendRequest';
+import './AdminPolyPage.css';
 
-export class AdminPage extends Component {
+export class AdminPolyPage extends Component {
     constructor(props) {
         super(props);
 
@@ -14,12 +13,16 @@ export class AdminPage extends Component {
 
     render() {
         return (
-            <div class="button-container">
-                <button class="button">Кнопка 1</button>
-                <button class="button">Кнопка 2</button>
+            <div class="column-container">
+                <button class="button">Добавить поликлинику</button>
+                <button class="button">Изменить данные о поликлинике</button>
+                <button class="button">Удалить поликлинику</button>
+                <button class="button">Список поликлиник</button>
+                <button className="admin-corner-button">&#8606;</button>
             </div>
+
         );
     }
 }
 
-export default AdminPage;
+export default AdminPolyPage;

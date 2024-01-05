@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import './AdminPage.css';
-import sendRequest from '../SendRequest';
+import './AdminCDocPage.css';
 
-export class AdminPage extends Component {
+export class AdminCDocPage extends Component {
     constructor(props) {
         super(props);
 
@@ -11,15 +10,17 @@ export class AdminPage extends Component {
         };
     }
 
-
     render() {
         return (
-            <div class="button-container">
-                <button class="button">Кнопка 1</button>
-                <button class="button">Кнопка 2</button>
+            <div className="column-container">
+                <button className="button">Добавить главврача</button>
+                <button className="button">Изменить данные главврача</button>
+                <button className="button">Удалить главврача</button>
+                <button className="button">Список главврачей</button>
+                <button className="admin-corner-button">&#8606;</button>
             </div>
         );
     }
 }
 
-export default AdminPage;
+export default AdminCDocPage;
