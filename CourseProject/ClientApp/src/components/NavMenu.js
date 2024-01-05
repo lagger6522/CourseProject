@@ -29,7 +29,26 @@ export class NavMenu extends Component {
           <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
           <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
             <ul className="navbar-nav flex-grow">
-
+              {sessionStorage.getItem("userId") !== null ?
+                (
+                        <div className="auth-buttons">
+                            <Link className="text-dark" to="/user/UserProfilePage">
+                                <button>Мой профиль</button>
+                            </Link>
+                            <Link className="text-dark" to="/">
+                                <button onClick={this.singOut}>Выход</button>
+                            </Link>
+                        </div>
+                ) : (
+                        <div className="auth-buttons">
+                            <Link className="text-dark" to="/Authentication/RegisterPage">
+                                <button>Регистрация</button>
+                            </Link>
+                            <Link className="text-dark" to="/Authentication/LoginPage">
+                                <button>Войти</button>
+                            </Link>
+                        </div> 
+                )}
             </ul>
           </Collapse>
         </Navbar>
