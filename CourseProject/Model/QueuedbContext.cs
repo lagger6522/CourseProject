@@ -27,7 +27,7 @@ public partial class QueuedbContext : DbContext
     {
         modelBuilder.Entity<Patient>(entity =>
         {
-            entity.HasKey(e => e.PatientId).HasName("PK__Patients__970EC346314FBF5E");
+            entity.HasKey(e => e.PatientId).HasName("PK__Patients__970EC346DA32977C");
 
             entity.Property(e => e.PatientId).HasColumnName("PatientID");
             entity.Property(e => e.BirthDate).HasColumnType("date");
@@ -39,7 +39,8 @@ public partial class QueuedbContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Patients)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Patients__UserID__398D8EEE");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Patients__UserID__4316F928");
         });
 
         modelBuilder.Entity<User>(entity =>
