@@ -15,48 +15,50 @@ import { CDocDel } from "./components/administrator/CDocDel";
 import { CDocAlt } from "./components/administrator/CDocAlt";
 
 const AppRoutes = [
-
-  {
-      path: '/administrator/AdminPolyPage',
-      element: <AdminPolyPage />
-  },
-  {
-      path: '/administrator/AdminCDocPage',
-      element: <AdminCDocPage />
-  },
-  {
-      path: '/administrator/PolyAdd',
-      element: <PolyAdd />
-  },
-  {
-      path: '/administrator/PolyAlt',
-      element: <PolyAlt />
-  },
-  {
-      path: '/administrator/PolyDel',
-      element: <PolyDel />
-  },
-  {
-      path: '/administrator/PolySel',
-      element: <PolySel />
-  },
-  {
-      path: '/administrator/CDocAdd',
-      element: <CDocAdd />
-  },
-  {
-      path: '/administrator/CDocAlt',
-      element: <CDocAlt />
-  },
-  {
-      path: '/administrator/CDocDel',
-      element: <CDocDel />
-  },
-  {
-      path: '/administrator/CDocSel',
-      element: <CDocSel />
-  },
-
+{
+    path: '/administrator/AdminPage',
+    element: <AdminPage />
+},
+{
+    path: '/administrator/AdminPolyPage',
+    element: <AdminPolyPage />
+},
+{
+    path: '/administrator/AdminCDocPage',
+    element: <AdminCDocPage />
+},
+{
+    path: '/administrator/PolyAdd',
+    element: <PolyAdd />
+},
+{
+    path: '/administrator/PolyAlt',
+    element: <PolyAlt />
+},
+{
+    path: '/administrator/PolyDel',
+    element: <PolyDel />
+},
+{
+    path: '/administrator/PolySel',
+    element: <PolySel />
+},
+{
+    path: '/administrator/CDocAdd',
+    element: <CDocAdd />
+},
+{
+    path: '/administrator/CDocAlt',
+    element: <CDocAlt />
+},
+{
+    path: '/administrator/CDocDel',
+    element: <CDocDel />
+},
+{
+    path: '/administrator/CDocSel',
+    element: <CDocSel />
+},
 {
   index: true,
   element: <Home />
