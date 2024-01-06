@@ -15,7 +15,7 @@ public partial class QueuedbContext : DbContext
     {
     }
 
-    public virtual DbSet<Clinic> Clinics { get; set; }
+    public virtual DbSet<Patient> Patients { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -25,43 +25,47 @@ public partial class QueuedbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Clinic>(entity =>
+        modelBuilder.Entity<Patient>(entity =>
         {
-            entity.HasKey(e => e.ClinicId).HasName("PK__Clinics__3347C2DDA74BDC05");
+            entity.HasKey(e => e.PatientId).HasName("PK__Patients__970EC346137F88EE");
 
-            entity.Property(e => e.AddressCity).HasMaxLength(50);
-            entity.Property(e => e.AddressHouse).HasMaxLength(10);
-            entity.Property(e => e.AddressStreet).HasMaxLength(50);
-            entity.Property(e => e.ClinicName).HasMaxLength(100);
-            entity.Property(e => e.RegistrationNumber).HasMaxLength(50);
-            entity.Property(e => e.Schedule).HasMaxLength(200);
-            entity.Property(e => e.Type).HasMaxLength(50);
+            entity.Property(e => e.PatientId).HasColumnName("PatientID");
+            entity.Property(e => e.BirthDate).HasColumnType("date");
+            entity.Property(e => e.FirstName)
+                .IsRequired()
+                .HasMaxLength(50);
+            entity.Property(e => e.Gender)
+                .IsRequired()
+                .HasMaxLength(10);
+            entity.Property(e => e.LastName)
+                .IsRequired()
+                .HasMaxLength(50);
+            entity.Property(e => e.MiddleName)
+                .IsRequired()
+                .HasMaxLength(50);
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Patients)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Patients__UserID__5070F446");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCAC400CCF1A");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCAC7CA4158A");
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.Email)
                 .IsRequired()
                 .HasMaxLength(100);
-            entity.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(50);
             entity.Property(e => e.Password)
                 .IsRequired()
                 .HasMaxLength(256);
-            entity.Property(e => e.Patronymic)
-                .IsRequired()
-                .HasMaxLength(50);
             entity.Property(e => e.Role)
                 .IsRequired()
                 .HasMaxLength(50)
                 .HasDefaultValueSql("('User')");
-            entity.Property(e => e.Surname)
-                .IsRequired()
-                .HasMaxLength(50);
         });
 
         OnModelCreatingPartial(modelBuilder);
