@@ -23,6 +23,7 @@ public partial class QueuedbContext : DbContext
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Data Source=localhost\\STOREDB;Initial Catalog=QUEUEDB;Integrated Security=True;Encrypt=False;");
 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Patient>(entity =>
@@ -51,6 +52,7 @@ public partial class QueuedbContext : DbContext
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.Password).HasMaxLength(256);
             entity.Property(e => e.Role)
+                .IsRequired()
                 .HasMaxLength(50)
                 .HasDefaultValueSql("('User')");
         });

@@ -12,6 +12,6 @@ public partial class User
     public string Email { get; set; } = null!;
 
     public string Role { get; set; } = null!;
-
+  
     public virtual ICollection<Patient> Patients { get; set; } = new List<Patient>();
 }
