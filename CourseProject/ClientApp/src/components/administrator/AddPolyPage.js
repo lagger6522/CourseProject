@@ -61,6 +61,7 @@ export class AddPolyPage extends Component {
                         <input type="submit" value="Добавить" style={{ width: '100%' }} />
                     </div>
                 </form>
+                <button className="admin-corner-button">&#8606;</button>
             </div>
         );
     }
