@@ -1,4 +1,7 @@
-﻿namespace CourseProject.Model;
+﻿using System;
+using System.Collections.Generic;
+
+namespace CourseProject.Model;
 
 public partial class User
 {
@@ -9,4 +12,6 @@ public partial class User
     public string Email { get; set; } = null!;
 
     public string Role { get; set; } = null!;
+
+    public virtual ICollection<Patient> Patients { get; set; } = new List<Patient>();
 }

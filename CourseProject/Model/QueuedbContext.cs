@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace CourseProject.Model;
 
@@ -13,6 +15,8 @@ public partial class QueuedbContext : DbContext
     {
     }
 
+    public virtual DbSet<Patient> Patients { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -21,6 +25,23 @@ public partial class QueuedbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Patient>(entity =>
+        {
+            entity.HasKey(e => e.PatientId).HasName("PK__Patients__970EC346314FBF5E");
+
+            entity.Property(e => e.PatientId).HasColumnName("PatientID");
+            entity.Property(e => e.BirthDate).HasColumnType("date");
+            entity.Property(e => e.FirstName).HasMaxLength(50);
+            entity.Property(e => e.Gender).HasMaxLength(10);
+            entity.Property(e => e.LastName).HasMaxLength(50);
+            entity.Property(e => e.MiddleName).HasMaxLength(50);
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Patients)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK__Patients__UserID__398D8EEE");
+        });
+
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCAC129898C5");

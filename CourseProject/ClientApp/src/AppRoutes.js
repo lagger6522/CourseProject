@@ -1,6 +1,7 @@
 import { Home } from "./components/Home";
 import { RegisterPage } from "./components/authentication/RegisterPage";
 import { LoginPage } from "./components/authentication/LoginPage";
+import UserProfilePage from "./components/user/UserProfilePage";
 
 const AppRoutes = [
   {
@@ -12,8 +13,12 @@ const AppRoutes = [
   element: <RegisterPage />
   },
   {
-    path: '/authentication/LoginPage',
-    element: <LoginPage />
+  path: '/authentication/LoginPage',
+  element: <LoginPage />
+  },
+  {
+  path: '/user/UserProfilePage',
+  element: <UserProfilePage />
   },
 ];
 
