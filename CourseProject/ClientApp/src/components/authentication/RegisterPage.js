@@ -83,7 +83,7 @@ export class RegisterPage extends Component {
 
         return (
             <div>
-                <form className="form" onSubmit={this.handleSubmit}>
+                <form className="form" onSubmit={this.handleSubmit}>                  
                     <input
                         className="input"
                         type="email"

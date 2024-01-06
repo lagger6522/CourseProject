@@ -21,47 +21,36 @@ public partial class QueuedbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-IHVPCAN\\POLYCLINICS;Initial Catalog=QUEUEDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
+        => optionsBuilder.UseSqlServer("Data Source=localhost\\STOREDB;Initial Catalog=QUEUEDB;Integrated Security=True;Encrypt=False;");
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Patient>(entity =>
         {
-            entity.HasKey(e => e.PatientId).HasName("PK__Patients__970EC346137F88EE");
+            entity.HasKey(e => e.PatientId).HasName("PK__Patients__970EC346DA32977C");
 
             entity.Property(e => e.PatientId).HasColumnName("PatientID");
             entity.Property(e => e.BirthDate).HasColumnType("date");
-            entity.Property(e => e.FirstName)
-                .IsRequired()
-                .HasMaxLength(50);
-            entity.Property(e => e.Gender)
-                .IsRequired()
-                .HasMaxLength(10);
-            entity.Property(e => e.LastName)
-                .IsRequired()
-                .HasMaxLength(50);
-            entity.Property(e => e.MiddleName)
-                .IsRequired()
-                .HasMaxLength(50);
+            entity.Property(e => e.FirstName).HasMaxLength(50);
+            entity.Property(e => e.Gender).HasMaxLength(10);
+            entity.Property(e => e.LastName).HasMaxLength(50);
+            entity.Property(e => e.MiddleName).HasMaxLength(50);
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.User).WithMany(p => p.Patients)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Patients__UserID__5070F446");
+                .HasConstraintName("FK__Patients__UserID__4316F928");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCAC7CA4158A");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCAC129898C5");
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
-            entity.Property(e => e.Email)
-                .IsRequired()
-                .HasMaxLength(100);
-            entity.Property(e => e.Password)
-                .IsRequired()
-                .HasMaxLength(256);
+            entity.Property(e => e.Email).HasMaxLength(100);
+            entity.Property(e => e.Password).HasMaxLength(256);
             entity.Property(e => e.Role)
                 .IsRequired()
                 .HasMaxLength(50)
