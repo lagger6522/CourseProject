@@ -6,14 +6,14 @@ import { LoginPage } from "./components/authentication/LoginPage";
 import { AdminPage } from "./components/administrator/AdminPage";
 import { AdminPolyPage } from "./components/administrator/AdminPolyPage";
 import { AdminCDocPage } from "./components/administrator/AdminCDocPage"
-import { AddPolyPage } from "./components/administrator/AddPolyPage";
-import { SelPolyPage } from "./components/administrator/SelPolyPage";
-import { DelPolyPage } from "./components/administrator/DelPolyPage";
-import { AltPolyPage } from "./components/administrator/AltPolyPage";
-import { AddCDocPage } from "./components/administrator/AddCDocPage";
-import { SelCDocPage } from "./components/administrator/SelCDocPage";
-import { DelCDocPage } from "./components/administrator/DelCDocPage";
-import { AltCDocPage } from "./components/administrator/AltCDocPage";
+import { PolyAdd } from "./components/administrator/PolyAdd";
+import { PolySel } from "./components/administrator/PolySel";
+import { PolyDel } from "./components/administrator/PolyDel";
+import { PolyAlt } from "./components/administrator/PolyAlt";
+import { CDocAdd } from "./components/administrator/CDocAdd";
+import { CDocSel } from "./components/administrator/CDocSel";
+import { CDocDel } from "./components/administrator/CDocDel";
+import { CDocAlt } from "./components/administrator/CDocAlt";
 
 const AppRoutes = [
     {
@@ -43,36 +43,36 @@ const AppRoutes = [
         element: <AdminCDocPage />
     },
     {
-        path: '/administrator/AddPolyPage',
-        element: <AddPolyPage />
+        path: '/administrator/PolyAdd',
+        element: <PolyAdd />
     },
     {
-        path: '/administrator/AltPolyPage',
-        element: <AltPolyPage />
+        path: '/administrator/PolyAlt',
+        element: <PolyAlt />
     },
     {
-        path: '/administrator/DelPolyPage',
-        element: <DelPolyPage />
+        path: '/administrator/PolyDel',
+        element: <PolyDel />
     },
     {
-        path: '/administrator/SelPolyPage',
-        element: <SelPolyPage />
+        path: '/administrator/PolySel',
+        element: <PolySel />
     },
     {
-        path: '/administrator/AddCDocPage',
-        element: <AddCDocPage />
+        path: '/administrator/CDocAdd',
+        element: <CDocAdd />
     },
     {
-        path: '/administrator/AltCDocPage',
-        element: <AltCDocPage />
+        path: '/administrator/CDocAlt',
+        element: <CDocAlt />
     },
     {
-        path: '/administrator/DelCDocPage',
-        element: <DelCDocPage />
+        path: '/administrator/CDocDel',
+        element: <CDocDel />
     },
     {
-        path: '/administrator/SelCDocPage',
-        element: <SelCDocPage />
+        path: '/administrator/CDocSel',
+        element: <CDocSel />
     },
 ];
 

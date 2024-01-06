@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import './DelPolyPage.css';
+import './PolyDel.css';
 
-export class DelPolyPage extends Component {
+export class PolyDel extends Component {
     constructor(props) {
         super(props);
 
@@ -29,4 +29,4 @@ export class DelPolyPage extends Component {
     }
 }
 
-export default DelPolyPage;
+export default PolyDel;

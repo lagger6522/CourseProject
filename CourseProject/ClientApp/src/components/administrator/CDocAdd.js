@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import './AltCDocPage.css';
+import './CDocAdd.css';
 
-export class AltCDocPage extends Component {
+export class CDocAdd extends Component {
     constructor(props) {
         super(props);
 
@@ -13,10 +13,10 @@ export class AltCDocPage extends Component {
     render() {
         return (
             <div>
-                Hello, i'm AltCDocPage!
+                Hello, i'm CDocAdd!
             </div>
         );
     }
 }
 
-export default AltCDocPage;
+export default CDocAdd;

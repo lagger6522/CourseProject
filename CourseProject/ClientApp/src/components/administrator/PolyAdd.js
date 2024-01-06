@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import './AddPolyPage.css';
+import './PolyAdd.css';
 
-export class AddPolyPage extends Component {
+export class PolyAdd extends Component {
     constructor(props) {
         super(props);
 
@@ -67,4 +67,4 @@ export class AddPolyPage extends Component {
     }
 }
 
-export default AddPolyPage;
+export default PolyAdd;

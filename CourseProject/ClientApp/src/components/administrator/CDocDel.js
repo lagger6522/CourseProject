@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import './DelCDocPage.css';
+import './CDocDel.css';
 
-export class DelCDocPage extends Component {
+export class CDocDel extends Component {
     constructor(props) {
         super(props);
 
@@ -19,4 +19,4 @@ export class DelCDocPage extends Component {
     }
 }
 
-export default DelCDocPage;
+export default CDocDel;

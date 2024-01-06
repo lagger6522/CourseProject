@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import './AltPolyPage.css';
+import './PolyAlt.css';
 
-export class AltPolyPage extends Component {
+export class PolyAlt extends Component {
     constructor(props) {
         super(props);
 
@@ -72,4 +72,4 @@ export class AltPolyPage extends Component {
 
 }
 
-export default AltPolyPage;
+export default PolyAlt;

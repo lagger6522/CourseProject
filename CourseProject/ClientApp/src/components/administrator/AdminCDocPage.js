@@ -14,16 +14,16 @@ export class AdminCDocPage extends Component {
     render() {
         return (
             <div className="button-container">
-                <Link to="/administrator/AddCDocPage" className="admin-button-link">
+                <Link to="/administrator/CDocAdd" className="admin-button-link">
                     <button className="admin-button">Добавить главврача</button>
                 </Link>
-                <Link to="/administrator/AltCDocPage" className="admin-button-link">
+                <Link to="/administrator/CDocAlt" className="admin-button-link">
                     <button className="admin-button">Изменить данные главврача</button>
                 </Link>
-                <Link to="/administrator/DelCDocPage" className="admin-button-link">
+                <Link to="/administrator/CDocDel" className="admin-button-link">
                     <button className="admin-button">Удалить главврача</button>
                 </Link>
-                <Link to="/administrator/SelCDocPage" className="admin-button-link">
+                <Link to="/administrator/CDocSel" className="admin-button-link">
                     <button className="admin-button">Список главврачей</button>
                 </Link>
                 <button className="admin-corner-button">&#8606;</button>
