@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { Collapse, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import sendRequest from './SendRequest';
 import './NavMenu.css';
 
 export class NavMenu extends Component {
   static displayName = NavMenu.name;
 
   constructor (props) {
-    super(props);
+      super(props);
+      this.state = { user: null };
+      this.singOut = this.singOut.bind(this);
 
     this.toggleNavbar = this.toggleNavbar.bind(this);
     this.state = {
@@ -19,7 +22,43 @@ export class NavMenu extends Component {
     this.setState({
       collapsed: !this.state.collapsed
     });
-  }
+    }
+
+    componentDidMount() {
+        if (sessionStorage.getItem("userId") === null) {
+            sendRequest("/api/User/Check", "Get", null)
+                .then(n => {
+                    this.setState({
+                        user: n,
+                    })
+                    sessionStorage.setItem("userId", n.userId);
+                    sessionStorage.setItem("email", n.email);
+                    sessionStorage.setItem("role", n.role);
+                    sessionStorage.setItem("isAuthenticated", true);
+
+                    // Проверка роли и перенаправление
+                    if (n.role === 'Admin') {
+                        window.location.href = "/administrator/AdminPage"
+                    }
+                    if (n.role === 'Manager') {
+                        window.location.href = "/manager/ManagerPage"
+                    }
+                }).catch(e => console.error(e))
+        }
+    }
+
+    singOut() {
+        sendRequest("/api/User/singOut", "Post", null)
+            .then(n => {
+                this.setState({
+                    user: null,
+                })
+                sessionStorage.removeItem("userId");
+                sessionStorage.removeItem("email");
+                sessionStorage.removeItem("role");
+                sessionStorage.removeItem("isAuthenticated");
+            }).catch(e => console.error(e))
+    }
 
   render() {
     return (
