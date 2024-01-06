@@ -14,7 +14,8 @@ VALUES ('Admin@mail.ru', '123', 'Admin');
 	
 	select * from Users
 	select * from Patients
-
+	select * from Hospitals
+	
 
 CREATE TABLE Users (
     UserID INT PRIMARY KEY IDENTITY(1,1),
@@ -32,4 +33,15 @@ CREATE TABLE Patients (
     BirthDate DATE NOT NULL,
     Gender NVARCHAR(10) NOT NULL CHECK(Gender IN ('Male', 'Female')),
     CONSTRAINT FK_Patients_Users FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+CREATE TABLE Hospitals (
+    HospitalID INT PRIMARY KEY IDENTITY(1,1),
+    ClinicName NVARCHAR(100) NOT NULL,
+    City NVARCHAR(50) NOT NULL,
+    Street NVARCHAR(50) NOT NULL,
+    HouseNumber NVARCHAR(10) NOT NULL,
+    RegistrationNumber NVARCHAR(20) NOT NULL,
+    WorkingHours NVARCHAR(100) NOT NULL,
+    ClinicType NVARCHAR(20) CHECK(ClinicType IN ('Adult', 'Pediatric', 'Specialized')) NOT NULL
 );
