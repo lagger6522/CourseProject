@@ -22,64 +22,26 @@ namespace Store.controllers
 			_context = context;
 		}
 
-		//[HttpGet]
-		//public IActionResult GetOrdersByUserId(int userId)
-		//{
-		//	try
-		//	{
-		//		// Получите заказы для указанного userId
-		//		var orders = _context.Orders
-		//			.Where(o => o.UserId == userId)
-		//			.ToList();
 
-		//		return Ok(orders);
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		return StatusCode(500, new { message = ex.Message });
-		//	}
-		//}
+		[Authorize]
+		[HttpGet]
+		public IActionResult Check()
+		{
+			if (User.Identity == null || !User.Identity.IsAuthenticated) return Problem("Пользователь не авторизован.");
+			var claim = User.Claims.FirstOrDefault(n => n.Type == "ClaimTypes.UserId");
+			if (claim == null)
+				return Problem("Пользователь не авторизован.");
+			int UserId = -1;
+			if (int.TryParse(claim.Value, out UserId))
+			{
+				var user = _context.Users.FirstOrDefault(u => u.UserId == UserId);
+				if (user == null)
+					return Problem("Пользователя не существует");
+				return Ok(new { role = user.Role, email = user.Email, userId = user.UserId });
+			}
+			return Problem("Пользователь не авторизован.");
+		}
 
-		//[HttpGet]
-		//public async Task<IActionResult> GetUserName(int userId)
-		//{
-		//	try
-		//	{
-		//		var user = await _context.Users
-		//			.FirstOrDefaultAsync(u => u.UserId == userId);
-
-		//		if (user == null)
-		//		{
-		//			return NotFound(new { message = "Пользователь не найден." });
-		//		}
-
-		//		return Ok(new { userName = user.Username });
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		return StatusCode(500, new { message = $"Ошибка при получении имени пользователя: {ex.Message}" });
-		//	}
-		//}
-
-		//[Authorize]
-		//[HttpGet]
-		//public IActionResult Check()
-		//{
-		//	if (User.Identity == null || !User.Identity.IsAuthenticated) return Problem("Пользователь не авторизован.");
-		//	var claim = User.Claims.FirstOrDefault(n => n.Type == "ClaimTypes.UserId");
-		//	if (claim == null) 
-		//		return Problem("Пользователь не авторизован.");
-		//	int UserId = -1;
-		//	if (int.TryParse(claim.Value, out UserId))
-		//	{
-		//		var user = _context.Users.FirstOrDefault(u => u.UserId == UserId);
-		//		if (user == null) 
-		//			return Problem("Пользователя не существует");
-		//		return Ok(new { role = user.Role, number = user.Number, email = user.Email, userName = user.Username, userId = user.UserId });
-		//	}
-		//	return Problem("Пользователь не авторизован.");
-
-		//}
 		[Authorize]
 		[HttpPost]
 		public async Task<IActionResult> singOut()
