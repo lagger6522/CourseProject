@@ -20,3 +20,5 @@ export class SelPolyPage extends Component {
 }
 
 export default SelPolyPage;
+
+// dotnet ef dbcontext scaffold "Data Source=DESKTOP-IHVPCAN\\POLYCLINICS;Initial Catalog=QUEUEDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False;" "Microsoft.EntityFrameworkCore.SqlServer" -o Model --force
