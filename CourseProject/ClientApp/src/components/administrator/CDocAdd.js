@@ -32,6 +32,24 @@ export class CDocAdd extends Component {
             return;
         }
 
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            this.setState({ errorMessage: 'Введите корректный адрес электронной почты' });
+            return;
+        }
+
+        if (password.length < 8 || !/\d/.test(password) || !/[a-zA-Z]/.test(password)) {
+            this.setState({
+                errorMessage: 'Пароль должен содержать минимум 8 символов, включая буквы и цифры',
+            });
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            this.setState({ errorMessage: 'Пароли не совпадают' });
+            return;
+        }
+
         sendRequest('/api/User/AddChiefDoctor', 'POST', {
             email,
             password,
@@ -42,12 +60,10 @@ export class CDocAdd extends Component {
         })
             .then(response => {
                 if (response.message) {
-                    // Обработка успешного добавления главврача
                     console.log('Главврач добавлен успешно:', response);
                 }
             })
             .catch(error => {
-                // Обработка ошибок при добавлении главврача
                 console.error('Ошибка добавления главврача:', error);
                 this.setState({ errorMessage: 'Что-то пошло не так при добавлении главврача.' });
             });
