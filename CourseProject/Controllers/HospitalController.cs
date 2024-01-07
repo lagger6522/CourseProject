@@ -110,5 +110,33 @@ namespace Store.controllers
 				return StatusCode(500, new { Message = "Error adding hospital", Error = ex.Message });
 			}
 		}
+
+		[HttpPost]
+		public async Task<IActionResult> CheckDuplicate([FromBody] HospitalNameDto clinicNameDto)
+		{
+			try
+			{
+				bool isDuplicate = await _context.Hospitals.AnyAsync(h => h.ClinicName == clinicNameDto.ClinicName);
+				return Ok(new { Duplicate = isDuplicate });
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, new { Message = "Error checking duplicate", Error = ex.Message });
+			}
+		}
+
+		[HttpPost]
+		public IActionResult CheckPhoneDuplicate([FromBody] PhoneDto phoneDto)
+		{
+			try
+			{
+				var isDuplicate = _context.Hospitals.Any(h => h.RegistrationNumber == phoneDto.RegistrationNumber);
+				return Ok(new { Duplicate = isDuplicate });
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, new { Message = "Error checking phone duplicate", Error = ex.Message });
+			}
+		}
 	}
 }	

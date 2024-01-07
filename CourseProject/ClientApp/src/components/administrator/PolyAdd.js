@@ -15,25 +15,57 @@ export class PolyAdd extends Component {
             registrationNumber: '',
             schedule: '',
             type: 'adult',
+            duplicateWarning: '',
         };
     }
 
     handleChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value,
+            duplicateWarning: '',
         });
     };
 
     handleSubmit = (e) => {
         e.preventDefault();
 
-        sendRequest('api/Hospital/AddHospital', 'POST', this.state)
-            .then((data) => {
-                console.log('Hospital added successfully:', data);
+        if (!this.isPhoneFullyEntered(this.state.registrationNumber)) {
+            this.setState({ duplicateWarning: 'Пожалуйста, введите полный номер телефона.' });
+            return;
+        }
+
+        sendRequest('api/Hospital/CheckDuplicate', 'POST', { clinicName: this.state.clinicName })
+            .then((result) => {
+                if (result.duplicate) {
+                    this.setState({ duplicateWarning: 'Клиника с таким именем уже существует.' });
+                } else {
+                    sendRequest('api/Hospital/CheckPhoneDuplicate', 'POST', { registrationNumber: this.state.registrationNumber })
+                        .then((phoneResult) => {
+                            if (phoneResult.duplicate) {
+                                this.setState({ duplicateWarning: 'Клиника с таким номером телефона уже существует.' });
+                            } else {
+                                sendRequest('api/Hospital/AddHospital', 'POST', this.state)
+                                    .then((data) => {
+                                        console.log('Hospital added successfully:', data);
+                                    })
+                                    .catch((error) => {
+                                        console.error('Error adding hospital:', error);
+                                    });
+                            }
+                        })
+                        .catch((phoneError) => {
+                            console.error('Error checking phone duplicate:', phoneError);
+                        });
+                }
             })
             .catch((error) => {
-                console.error('Error adding hospital:', error);
+                console.error('Error checking duplicate:', error);
             });
+    };
+
+    isPhoneFullyEntered = (phone) => {
+        const phoneRegex = /\+375 \(\d{2}\) \d{3}-\d{2}-\d{2}/;
+        return phoneRegex.test(phone);
     };
 
     render() {
@@ -155,6 +187,9 @@ export class PolyAdd extends Component {
                     </div>
                     <div className="form-group">
                         <input type="submit" value="Добавить" style={{ width: '100%' }} />
+                        {this.state.duplicateWarning && (
+                            <p style={{ color: 'red' }}>{this.state.duplicateWarning}</p>
+                        )}
                     </div>
                 </form>
                 <button className="admin-corner-button">&#8606;</button>

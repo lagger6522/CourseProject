@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import InputMask from 'react-input-mask';
 import sendRequest from '../SendRequest';
 import './PolyAlt.css';
 
@@ -15,8 +16,16 @@ export class PolyAlt extends Component {
             registrationNumber: '',
             schedule: '',
             type: 'adult',
+            duplicateWarning: '',
         };
     }
+
+    handleChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value,
+            duplicateWarning: '',
+        });
+    };
 
     componentDidMount() {
         this.loadClinics();
@@ -36,47 +45,84 @@ export class PolyAlt extends Component {
 
     handleClinicChange = (e) => {
         const selectedClinic = e.target.value;
+        const selectedHospital = this.state.clinics.find((hospital) => hospital.clinicName === selectedClinic);
+
         this.setState({
             selectedClinic,
+            addressCity: selectedHospital.city,
+            addressStreet: selectedHospital.street,
+            addressHouse: selectedHospital.houseNumber,
+            registrationNumber: selectedHospital.registrationNumber,
+            schedule: selectedHospital.workingHours,
+            type: selectedHospital.clinicType,
         });
-
-        sendRequest(`api/Hospital/GetHospitalByClinicName?clinicName=${selectedClinic}`, 'GET')
-            .then((hospital) => {
-                this.setState({
-                    addressCity: hospital.city,
-                    addressStreet: hospital.street,
-                    addressHouse: hospital.houseNumber,
-                    registrationNumber: hospital.registrationNumber,
-                    schedule: hospital.workingHours,
-                    type: hospital.clinicType,
-                });
-            })
-            .catch((error) => {
-                console.error('Error loading hospital data:', error);
-            });
     };
 
     handleFormSubmit = (e) => {
         e.preventDefault();
 
-        const { selectedClinic, addressCity, addressStreet, addressHouse, registrationNumber, schedule, type } = this.state;
-        const requestData = {
-            clinicName: selectedClinic,
-            addressCity,
-            addressStreet,
-            addressHouse,
-            registrationNumber,
-            schedule,
-            type,
-        };
+        if (!this.isPhoneFullyEntered(this.state.registrationNumber)) {
+            this.setState({ duplicateWarning: 'Пожалуйста, введите полный номер телефона.' });
+            return;
+        }
 
-        sendRequest('api/Hospital/UpdateHospital', 'POST', requestData)
-            .then((data) => {
-                console.log('Hospital updated successfully:', data);
-            })
-            .catch((error) => {
-                console.error('Error updating hospital:', error);
-            });
+        const { selectedClinic, addressCity, addressStreet, addressHouse, registrationNumber, schedule, type } = this.state;
+
+        const originalHospital = this.state.clinics.find((hospital) => hospital.clinicName === selectedClinic);
+        const originalPhoneNumber = originalHospital.registrationNumber;
+
+        if (registrationNumber === originalPhoneNumber) {
+            const requestData = {
+                clinicName: selectedClinic,
+                addressCity,
+                addressStreet,
+                addressHouse,
+                registrationNumber,
+                schedule,
+                type,
+            };
+
+            sendRequest('api/Hospital/UpdateHospital', 'POST', requestData)
+                .then((data) => {
+                    console.log('Hospital updated successfully:', data);
+                })
+                .catch((error) => {
+                    console.error('Error updating hospital:', error);
+                });
+        } else {
+            sendRequest('api/Hospital/CheckPhoneDuplicate', 'POST', { registrationNumber: this.state.registrationNumber })
+                .then((phoneResult) => {
+                    if (phoneResult.duplicate) {
+                        this.setState({ duplicateWarning: 'Клиника с таким номером телефона уже существует.' });
+                    } else {
+                        const requestData = {
+                            clinicName: selectedClinic,
+                            addressCity,
+                            addressStreet,
+                            addressHouse,
+                            registrationNumber,
+                            schedule,
+                            type,
+                        };
+
+                        sendRequest('api/Hospital/UpdateHospital', 'POST', requestData)
+                            .then((data) => {
+                                console.log('Hospital updated successfully:', data);
+                            })
+                            .catch((error) => {
+                                console.error('Error updating hospital:', error);
+                            });
+                    }
+                })
+                .catch((phoneError) => {
+                    console.error('Error checking phone duplicate:', phoneError);
+                });
+        }
+    };
+
+    isPhoneFullyEntered = (phone) => {
+        const phoneRegex = /\+375 \(\d{2}\) \d{3}-\d{2}-\d{2}/;
+        return phoneRegex.test(phone);
     };
 
     render() {
@@ -94,9 +140,9 @@ export class PolyAlt extends Component {
                             required
                         >
                             <option value="" disabled>Select a clinic</option>
-                            {this.state.clinics.map((clinic) => (
-                                <option key={clinic} value={clinic}>
-                                    {clinic}
+                            {this.state.clinics.map((hospital) => (
+                                <option key={hospital.hospitalId} value={hospital.clinicName}>
+                                    {hospital.clinicName}
                                 </option>
                             ))}
                         </select>
@@ -135,13 +181,14 @@ export class PolyAlt extends Component {
                         />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="registrationNumber">Номер регистратуры</label>
-                        <input
-                            type="text"
+                        <label htmlFor="registrationNumber">Номер регистратуры (телефонный номер)</label>
+                        <InputMask
+                            mask="+375 (99) 999-99-99"
+                            maskChar="_"
                             id="registrationNumber"
                             name="registrationNumber"
                             value={this.state.registrationNumber}
-                            onChange={(e) => this.setState({ registrationNumber: e.target.value })}
+                            onChange={this.handleChange}
                             required
                         />
                     </div>
@@ -200,6 +247,9 @@ export class PolyAlt extends Component {
                     </div>
                     <div className="form-group">
                         <input type="submit" value="Изменить" style={{ width: '100%' }} />
+                        {this.state.duplicateWarning && (
+                            <p style={{ color: 'red' }}>{this.state.duplicateWarning}</p>
+                        )}
                     </div>
                 </form>
                 <button className="admin-corner-button">&#8606;</button>
