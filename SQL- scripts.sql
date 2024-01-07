@@ -13,7 +13,10 @@ IF OBJECT_ID('Hospitals', 'U') IS NOT NULL
 		
 
 	INSERT INTO Users (FirstName, LastName, MiddleName, Email, Password, Role)
-VALUES ('Admin', 'Admin', 'Admin','Admin@mail.ru', '123', 'Admin');
+VALUES ('Admin', 'Admin', 'Admin', 'Admin@mail.ru', '123', 'Admin');
+	
+INSERT INTO Users (FirstName, LastName, MiddleName, Email, Password, Role)
+VALUES ('Admin', 'Admin', 'Admin', 'Chief@mail.ru', '123', 'Chief Medical Officer');
 	
 	select * from Users
 	select * from Patients
@@ -27,7 +30,8 @@ CREATE TABLE Users (
     MiddleName NVARCHAR(50) NOT NULL,
     Password NVARCHAR(256) NOT NULL,
     Email NVARCHAR(100) NOT NULL,
-	Role NVARCHAR(50) NOT NULL DEFAULT 'User' CHECK(Role IN ('User', 'Doctor', 'Chief Medical Officer', 'Admin'))
+	Role NVARCHAR(50) NOT NULL DEFAULT 'User' CHECK(Role IN ('User', 'Doctor', 'Chief Medical Officer', 'Admin')),
+	Specialization NVARCHAR(100) NULL,
 );
 
 CREATE TABLE Patients (

@@ -2,6 +2,7 @@ import { Home } from "./components/Home";
 import { RegisterPage } from "./components/authentication/RegisterPage";
 import { LoginPage } from "./components/authentication/LoginPage";
 import UserProfilePage from "./components/user/UserProfilePage";
+import { ChiefPage } from "./components/chief/ChiefPage";
 import { AdminPage } from "./components/administrator/AdminPage";
 import { AdminPolyPage } from "./components/administrator/AdminPolyPage";
 import { AdminCDocPage } from "./components/administrator/AdminCDocPage"
@@ -11,15 +12,19 @@ import { PolyAlt } from "./components/administrator/PolyAlt";
 import { CDocAdd } from "./components/administrator/CDocAdd";
 import { CDocSel } from "./components/administrator/CDocSel";
 import { CDocAlt } from "./components/administrator/CDocAlt";
-
+import { DocAdd } from "./components/chief/DocAdd";
 const AppRoutes = [
-{
+    {
     path: '/administrator/AdminPage',
     element: <AdminPage />
 },
 {
     path: '/administrator/AdminPolyPage',
     element: <AdminPolyPage />
+},
+{
+    path: '/chief/DocAdd',
+    element: <DocAdd />
 },
 {
     path: '/administrator/AdminCDocPage',
@@ -50,20 +55,24 @@ const AppRoutes = [
     element: <CDocSel />
 },
 {
-  index: true,
-  element: <Home />
+    index: true,
+    element: <Home />
 },
 {
-path: '/authentication/RegisterPage',
-element: <RegisterPage />
+    path: '/authentication/RegisterPage',
+    element: <RegisterPage />
 },
 {
-path: '/authentication/LoginPage',
-element: <LoginPage />
+    path: '/authentication/LoginPage',
+    element: <LoginPage />
 },
 {
-path: '/user/UserProfilePage',
-element: <UserProfilePage />
+    path: '/user/UserProfilePage',
+    element: <UserProfilePage />
+},
+{
+    path: '/chief/ChiefPage',
+    element: <ChiefPage />
 },
 ];
 

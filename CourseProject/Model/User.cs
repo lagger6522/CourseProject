@@ -19,5 +19,7 @@ public partial class User
 
     public string Role { get; set; } = null!;
 
+    public string? Specialization { get; set; }
+
     public virtual ICollection<Patient> Patients { get; set; } = new List<Patient>();
 }

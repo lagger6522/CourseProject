@@ -43,7 +43,7 @@ public partial class QueuedbContext : DbContext
 
         modelBuilder.Entity<Patient>(entity =>
         {
-            entity.HasKey(e => e.PatientId).HasName("PK__Patients__970EC346AEDD704A");
+            entity.HasKey(e => e.PatientId).HasName("PK__Patients__970EC3461D70079B");
 
             entity.Property(e => e.PatientId).HasColumnName("PatientID");
             entity.Property(e => e.BirthDate).HasColumnType("date");
@@ -56,12 +56,12 @@ public partial class QueuedbContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Patients)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Patients__UserID__5165187F");
+                .HasConstraintName("FK__Patients__UserID__5CD6CB2B");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCACA5B69208");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCAC7348C7EB");
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.Email).HasMaxLength(100);
@@ -72,6 +72,7 @@ public partial class QueuedbContext : DbContext
             entity.Property(e => e.Role)
                 .HasMaxLength(50)
                 .HasDefaultValueSql("('User')");
+            entity.Property(e => e.Specialization).HasMaxLength(100);
         });
 
         OnModelCreatingPartial(modelBuilder);

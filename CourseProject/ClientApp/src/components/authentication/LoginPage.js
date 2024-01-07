@@ -33,7 +33,9 @@ export class LoginPage extends Component {
                 if (data.role === 'User') {
                     window.location.href = "/"                  
                 } else if (data.role === 'Admin') {
-                    window.location.href = "/administrator/AdminPage"                
+                    window.location.href = "/administrator/AdminPage"     
+                } else if (data.role === 'Chief Medical Officer') {
+                    window.location.href = "/chief/ChiefPage"     
                 } else {
                     window.location.href = "/manager/ManagerPage"
                 }

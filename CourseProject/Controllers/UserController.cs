@@ -188,6 +188,37 @@ namespace Store.controllers
 			}
 		}
 
+		[HttpPost]
+		public async Task<IActionResult> AddDoctor([FromBody] DoctorRegisterModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			if (_context.Users.Any(u => u.Email == model.Email))
+			{
+				ModelState.AddModelError("Email", "User with this email already exists.");
+				return BadRequest(ModelState);
+			}
+
+			var doctor = new User
+			{
+				Email = model.Email,
+				Password = HashPassword(model.Password),
+				FirstName = model.FirstName,
+				LastName = model.LastName,
+				MiddleName = model.MiddleName,
+				Role = "Doctor",
+				Specialization = model.Specialization
+			};
+
+			_context.Users.Add(doctor);
+			await _context.SaveChangesAsync();
+
+			return Json(new { message = "Doctor added successfully." });
+		}
+
 		private string HashPassword(string password)
 		{
 			return password;
