@@ -20,9 +20,6 @@ export class AdminCDocPage extends Component {
                 <Link to="/administrator/CDocAlt" className="admin-button-link">
                     <button className="admin-button">Изменить данные главврача</button>
                 </Link>
-                <Link to="/administrator/CDocDel" className="admin-button-link">
-                    <button className="admin-button">Удалить главврача</button>
-                </Link>
                 <Link to="/administrator/CDocSel" className="admin-button-link">
                     <button className="admin-button">Список главврачей</button>
                 </Link>

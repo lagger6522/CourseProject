@@ -10,7 +10,6 @@ import { PolyList } from "./components/administrator/PolyList";
 import { PolyAlt } from "./components/administrator/PolyAlt";
 import { CDocAdd } from "./components/administrator/CDocAdd";
 import { CDocSel } from "./components/administrator/CDocSel";
-import { CDocDel } from "./components/administrator/CDocDel";
 import { CDocAlt } from "./components/administrator/CDocAlt";
 
 const AppRoutes = [
@@ -45,10 +44,6 @@ const AppRoutes = [
 {
     path: '/administrator/CDocAlt',
     element: <CDocAlt />
-},
-{
-    path: '/administrator/CDocDel',
-    element: <CDocDel />
 },
 {
     path: '/administrator/CDocSel',

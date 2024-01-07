@@ -164,6 +164,30 @@ namespace Store.controllers
 			}
 		}
 
+		[HttpPost]
+		public async Task<IActionResult> DeleteChiefDoctor(string email)
+		{
+			try
+			{
+				var chiefDoctor = await _context.Users
+					.FirstOrDefaultAsync(u => u.Email == email && u.Role == "Chief Medical Officer");
+
+				if (chiefDoctor == null)
+				{
+					return NotFound("Главврач не найден.");
+				}
+
+				_context.Users.Remove(chiefDoctor);
+				await _context.SaveChangesAsync();
+
+				return Ok(new { message = "Главврач успешно удален." });
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Внутренняя ошибка сервера: {ex.Message}");
+			}
+		}
+
 		private string HashPassword(string password)
 		{
 			return password;
