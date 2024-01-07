@@ -123,38 +123,46 @@ namespace Store.controllers
 			return Json(new { message = "Регистрация успешна." });
 		}
 
-		[HttpPost]
-		public async Task<IActionResult> AddChiefDoctor([FromBody] ChiefDoctorModel model)
+		[HttpGet]
+		public async Task<ActionResult<IEnumerable<ChiefDoctorModel>>> GetAllChiefDoctors()
 		{
-			if (model == null)
-			{
-				return BadRequest("Invalid data");
-			}
-
-			if (await _context.Users.AnyAsync(u => u.Email == model.Email))
-			{
-				Console.WriteLine($"Пользователь с email '{model.Email}' уже существует.");
-				ModelState.AddModelError("Email", "Пользователь с таким email уже существует.");
-				return Problem("Пользователь с таким email уже существует.");
-			}
-
-			var chiefDoctor = new User
-			{
-				FirstName = model.FirstName,
-				LastName = model.LastName,
-				MiddleName = model.MiddleName,
-				Password = HashPassword(model.Password),
-				Email = model.Email,
-				Role = "Chief Medical Officer"
-			};
-
-			_context.Users.Add(chiefDoctor);
-			await _context.SaveChangesAsync();
-
-			return Json(new { message = "Главврач добавлен успешно." });
+			return await _context.Users
+				.Where(u => u.Role == "Chief Medical Officer")
+				.Select(u => new ChiefDoctorModel
+				{
+					FirstName = u.FirstName,
+					LastName = u.LastName,
+					MiddleName = u.MiddleName,
+					Email = u.Email
+				})
+				.ToListAsync();
 		}
 
+		[HttpPost]
+		public async Task<IActionResult> UpdateChiefDoctor([FromBody] ChiefDoctorUpdateModel model)
+		{
+			var chiefDoctor = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.OriginalEmail);
 
+			if (chiefDoctor == null)
+			{
+				return NotFound();
+			}
+
+			chiefDoctor.FirstName = model.FirstName;
+			chiefDoctor.LastName = model.LastName;
+			chiefDoctor.MiddleName = model.MiddleName;
+			chiefDoctor.Email = model.Email;
+
+			try
+			{
+				await _context.SaveChangesAsync();
+				return Ok(new { message = "Данные главврача обновлены успешно." });
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				return BadRequest("Ошибка при сохранении данных.");
+			}
+		}
 
 		private string HashPassword(string password)
 		{
