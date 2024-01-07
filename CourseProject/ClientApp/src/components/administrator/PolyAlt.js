@@ -40,10 +40,8 @@ export class PolyAlt extends Component {
             selectedClinic,
         });
 
-        // Загрузка данных о клинике при выборе
         sendRequest(`api/Hospital/GetHospitalByClinicName?clinicName=${selectedClinic}`, 'GET')
             .then((hospital) => {
-                // Автоматическое заполнение полей данными о клинике
                 this.setState({
                     addressCity: hospital.city,
                     addressStreet: hospital.street,
@@ -61,7 +59,6 @@ export class PolyAlt extends Component {
     handleFormSubmit = (e) => {
         e.preventDefault();
 
-        // Отправка запроса на сервер для изменения данных клиники
         const { selectedClinic, addressCity, addressStreet, addressHouse, registrationNumber, schedule, type } = this.state;
         const requestData = {
             clinicName: selectedClinic,

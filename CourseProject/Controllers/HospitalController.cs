@@ -14,6 +14,22 @@ namespace Store.controllers
 			_context = context;
 		}
 
+		[HttpDelete]
+		public IActionResult DeleteHospital(int hospitalId)
+		{
+			var hospital = _context.Hospitals.FirstOrDefault(n => n.HospitalId == hospitalId);
+
+			if (hospital == null)
+			{
+				return NotFound();
+			}
+
+			_context.Hospitals.Remove(hospital);
+			_context.SaveChanges();
+
+			return Ok(new { message = "Удалено." });
+		}
+
 		[HttpPost]
 		public async Task<IActionResult> UpdateHospital([FromBody] HospitalDto updatedHospital)
 		{
@@ -51,7 +67,7 @@ namespace Store.controllers
 		[HttpGet]
 		public async Task<IActionResult> GetAllHospitals()
 		{
-			var hospitals = await _context.Hospitals.Select(h => h.ClinicName).ToListAsync();
+			var hospitals = await _context.Hospitals.ToListAsync();
 			return Ok(hospitals);
 		}
 

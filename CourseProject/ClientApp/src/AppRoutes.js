@@ -6,8 +6,7 @@ import { AdminPage } from "./components/administrator/AdminPage";
 import { AdminPolyPage } from "./components/administrator/AdminPolyPage";
 import { AdminCDocPage } from "./components/administrator/AdminCDocPage"
 import { PolyAdd } from "./components/administrator/PolyAdd";
-import { PolySel } from "./components/administrator/PolySel";
-import { PolyDel } from "./components/administrator/PolyDel";
+import { PolyList } from "./components/administrator/PolyList";
 import { PolyAlt } from "./components/administrator/PolyAlt";
 import { CDocAdd } from "./components/administrator/CDocAdd";
 import { CDocSel } from "./components/administrator/CDocSel";
@@ -36,12 +35,8 @@ const AppRoutes = [
     element: <PolyAlt />
 },
 {
-    path: '/administrator/PolyDel',
-    element: <PolyDel />
-},
-{
-    path: '/administrator/PolySel',
-    element: <PolySel />
+    path: '/administrator/PolyList',
+    element: <PolyList />
 },
 {
     path: '/administrator/CDocAdd',

@@ -21,10 +21,7 @@ export class AdminPolyPage extends Component {
                 <Link to="/administrator/PolyAlt" className="admin-button-link">
                     <button className="admin-button">Изменить данные поликлиники</button>
                 </Link>
-                <Link to="/administrator/PolyDel" className="admin-button-link">
-                    <button className="admin-button">Удалить поликлинику</button>
-                </Link>
-                <Link to="/administrator/PolySel" className="admin-button-link">
+                <Link to="/administrator/PolyList" className="admin-button-link">
                     <button className="admin-button">Список поликлиник</button>
                 </Link>
                 <button className="admin-corner-button">&#8606;</button>
