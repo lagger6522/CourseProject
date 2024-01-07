@@ -1,3 +1,4 @@
+// DoctorList.js
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import sendRequest from '../SendRequest';
@@ -27,8 +28,8 @@ export class DoctorList extends Component {
             });
     };
 
-    handleDeleteDoctor = (email) => {
-        sendRequest(`/api/User/DeleteDoctor`, 'DELETE', null, { email } )
+    handleDeleteDoctor = (UserId) => {
+        sendRequest(`/api/User/DeleteDoctor`, 'DELETE', null, { UserId })
             .then(() => {
                 this.getDoctors();
             })
@@ -47,10 +48,14 @@ export class DoctorList extends Component {
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
                 <ul>
                     {doctors.map(doctor => (
-                        <li key={doctor.email}>
+                        <li key={doctor.UserId}>
                             <strong>{doctor.lastName} {doctor.firstName} {doctor.middleName}</strong>
                             <p>Email: {doctor.email}</p>
                             <p>Specialization: {doctor.specialization}</p>
+                            <p>UserId: {doctor.UserId}</p>
+                            <Link to={`/schedule/edit/${doctor.UserId}`}>
+                                <button>Edit Schedule</button>
+                            </Link>
                             <button onClick={() => this.handleDeleteDoctor(doctor.email)}>Delete</button>
                         </li>
                     ))}

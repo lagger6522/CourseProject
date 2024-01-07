@@ -16,7 +16,7 @@ import { DoctorList } from "./components/chief/DoctorList";
 import { ChiefPage } from "./components/chief/ChiefPage";
 
 const AppRoutes = [
-    {
+{
     path: '/administrator/AdminPage',
     element: <AdminPage />
 },

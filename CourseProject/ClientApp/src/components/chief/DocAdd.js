@@ -139,8 +139,8 @@ export class DocAdd extends Component {
                         required
                     >
                         <option value="" disabled>Выберите специализацию</option>
-                        <option value="Cardiologist">Кардиолог</option>
-                        <option value="Dermatologist">Дерматолог</option>
+                        <option value="Терапевт">Терапевт</option>
+                        <option value="Дерматолог">Дерматолог</option>
                     </select>
                     <button className="btn" type="submit">
                         Добавить

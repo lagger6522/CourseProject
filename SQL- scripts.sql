@@ -55,3 +55,14 @@ CREATE TABLE Hospitals (
     WorkingHours NVARCHAR(100) NOT NULL,
     ClinicType NVARCHAR(20) CHECK(ClinicType IN ('Adult', 'Pediatric', 'Specialized')) NOT NULL
 );
+
+CREATE TABLE Schedules (
+    ScheduleID INT PRIMARY KEY IDENTITY(1,1),
+    DoctorID INT NOT NULL FOREIGN KEY REFERENCES Users(UserID),
+    DayOfWeek NVARCHAR(20) NOT NULL CHECK(DayOfWeek IN ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')),
+    StartTime TIME NOT NULL,
+    EndTime TIME NOT NULL,
+    LunchBreakStart TIME NULL,
+    LunchBreakEnd TIME NULL,
+    CONSTRAINT FK_Schedules_Users FOREIGN KEY (DoctorID) REFERENCES Users(UserID)
+);

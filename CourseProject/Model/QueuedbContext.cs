@@ -19,6 +19,8 @@ public partial class QueuedbContext : DbContext
 
     public virtual DbSet<Patient> Patients { get; set; }
 
+    public virtual DbSet<Schedule> Schedules { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -57,6 +59,20 @@ public partial class QueuedbContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Patients__UserID__5CD6CB2B");
+        });
+
+        modelBuilder.Entity<Schedule>(entity =>
+        {
+            entity.HasKey(e => e.ScheduleId).HasName("PK__Schedule__9C8A5B69FDEF920C");
+
+            entity.Property(e => e.ScheduleId).HasColumnName("ScheduleID");
+            entity.Property(e => e.DayOfWeek).HasMaxLength(20);
+            entity.Property(e => e.DoctorId).HasColumnName("DoctorID");
+
+            entity.HasOne(d => d.Doctor).WithMany(p => p.Schedules)
+                .HasForeignKey(d => d.DoctorId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Schedules__Docto__628FA481");
         });
 
         modelBuilder.Entity<User>(entity =>

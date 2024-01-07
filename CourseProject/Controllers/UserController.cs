@@ -9,6 +9,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using CourseProject.Model;
 using Store.Domain.Model;
+using System.Numerics;
 
 namespace Store.controllers
 {
@@ -260,7 +261,16 @@ namespace Store.controllers
 					})
 					.ToList();
 
-				return Ok(doctors);
+				if (doctors.Any())
+				{
+					Console.WriteLine("Doctors:", doctors);
+					return Ok(doctors);
+				}
+				else
+				{
+					Console.WriteLine("No doctors found.");
+					return NotFound("No doctors found.");
+				}
 			}
 			catch (Exception ex)
 			{
@@ -269,6 +279,7 @@ namespace Store.controllers
 				return StatusCode(500, "Internal Server Error");
 			}
 		}
+
 
 		private string HashPassword(string password)
 		{
