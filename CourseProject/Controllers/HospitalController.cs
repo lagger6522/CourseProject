@@ -44,7 +44,6 @@ namespace Store.controllers
 			}
 			catch (DbUpdateException ex)
 			{
-				// Обработка ошибок сохранения в базу данных
 				return StatusCode(500, $"Error updating hospital: {ex.Message}");
 			}
 		}
