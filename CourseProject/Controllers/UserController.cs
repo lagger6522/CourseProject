@@ -219,6 +219,57 @@ namespace Store.controllers
 			return Json(new { message = "Doctor added successfully." });
 		}
 
+		[HttpDelete]
+		public async Task<IActionResult> DeleteDoctor(string email)
+		{
+			var doctor = await _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.Role == "Doctor");
+
+			if (doctor == null)
+			{
+				return NotFound(new { message = "Doctor not found." });
+			}
+
+			try
+			{
+				_context.Users.Remove(doctor);
+				await _context.SaveChangesAsync();
+
+				return Ok(new { message = "Doctor deleted successfully." });
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, new { message = $"An error occurred: {ex.Message}" });
+			}
+		}
+
+		[HttpGet]
+		public IActionResult GetDoctors()
+		{
+			try
+			{
+				var doctors = _context.Users
+					.Where(u => u.Role == "Doctor")
+					.Select(u => new
+					{
+						UserId = u.UserId,
+						FirstName = u.FirstName,
+						LastName = u.LastName,
+						MiddleName = u.MiddleName,
+						Email = u.Email,
+						Specialization = u.Specialization
+					})
+					.ToList();
+
+				return Ok(doctors);
+			}
+			catch (Exception ex)
+			{
+				// Log the exception or handle it as needed
+				Console.Error.WriteLine($"Error retrieving doctors: {ex.Message}");
+				return StatusCode(500, "Internal Server Error");
+			}
+		}
+
 		private string HashPassword(string password)
 		{
 			return password;

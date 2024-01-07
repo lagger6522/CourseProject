@@ -2,7 +2,6 @@ import { Home } from "./components/Home";
 import { RegisterPage } from "./components/authentication/RegisterPage";
 import { LoginPage } from "./components/authentication/LoginPage";
 import UserProfilePage from "./components/user/UserProfilePage";
-import { ChiefPage } from "./components/chief/ChiefPage";
 import { AdminPage } from "./components/administrator/AdminPage";
 import { AdminPolyPage } from "./components/administrator/AdminPolyPage";
 import { AdminCDocPage } from "./components/administrator/AdminCDocPage"
@@ -13,6 +12,9 @@ import { CDocAdd } from "./components/administrator/CDocAdd";
 import { CDocSel } from "./components/administrator/CDocSel";
 import { CDocAlt } from "./components/administrator/CDocAlt";
 import { DocAdd } from "./components/chief/DocAdd";
+import { DoctorList } from "./components/chief/DoctorList";
+import { ChiefPage } from "./components/chief/ChiefPage";
+
 const AppRoutes = [
     {
     path: '/administrator/AdminPage',
@@ -25,6 +27,10 @@ const AppRoutes = [
 {
     path: '/chief/DocAdd',
     element: <DocAdd />
+},
+{
+    path: '/chief/DoctorList',
+    element: <DoctorList />
 },
 {
     path: '/administrator/AdminCDocPage',

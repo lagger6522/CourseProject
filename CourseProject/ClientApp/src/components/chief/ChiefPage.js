@@ -14,9 +14,10 @@ export class ChiefPage extends Component {
     render() {
         return (
             <div className="button-container">  
-                <Link to="/chief/DocAdd">
-                    <button>Добавить врача</button>
+                <Link to="/chief/DoctorList">
+                    <button>Список врачей</button>
                 </Link>
+
             </div>
         );
     }
