@@ -12,8 +12,8 @@ IF OBJECT_ID('Hospitals', 'U') IS NOT NULL
 
 		
 
-	INSERT INTO Users (Email, Password, Role)
-VALUES ('Admin@mail.ru', '123', 'Admin');
+	INSERT INTO Users (FirstName, LastName, MiddleName, Email, Password, Role)
+VALUES ('Admin', 'Admin', 'Admin','Admin@mail.ru', '123', 'Admin');
 	
 	select * from Users
 	select * from Patients
