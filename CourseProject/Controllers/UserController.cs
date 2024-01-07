@@ -111,7 +111,10 @@ namespace Store.controllers
 			var user = new User
 			{
 				Email = model.Email,
-				Password = HashPassword(model.Password)
+				Password = HashPassword(model.Password),
+				FirstName = model.FirstName,
+				LastName = model.LastName,
+				MiddleName = model.MiddleName
 			};
 
 			_context.Users.Add(user);
@@ -119,6 +122,7 @@ namespace Store.controllers
 
 			return Json(new { message = "Регистрация успешна." });
 		}
+
 
 
 		private string HashPassword(string password)

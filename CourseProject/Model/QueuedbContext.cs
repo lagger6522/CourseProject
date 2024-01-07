@@ -29,7 +29,7 @@ public partial class QueuedbContext : DbContext
     {
         modelBuilder.Entity<Hospital>(entity =>
         {
-            entity.HasKey(e => e.HospitalId).HasName("PK__Hospital__38C2E58FC32DFDEC");
+            entity.HasKey(e => e.HospitalId).HasName("PK__Hospital__38C2E58F1DC49978");
 
             entity.Property(e => e.HospitalId).HasColumnName("HospitalID");
             entity.Property(e => e.City).HasMaxLength(50);
@@ -43,7 +43,7 @@ public partial class QueuedbContext : DbContext
 
         modelBuilder.Entity<Patient>(entity =>
         {
-            entity.HasKey(e => e.PatientId).HasName("PK__Patients__970EC346DA32977C");
+            entity.HasKey(e => e.PatientId).HasName("PK__Patients__970EC346AEDD704A");
 
             entity.Property(e => e.PatientId).HasColumnName("PatientID");
             entity.Property(e => e.BirthDate).HasColumnType("date");
@@ -56,15 +56,18 @@ public partial class QueuedbContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Patients)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Patients__UserID__4316F928");
+                .HasConstraintName("FK__Patients__UserID__5165187F");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCAC129898C5");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCACA5B69208");
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.Email).HasMaxLength(100);
+            entity.Property(e => e.FirstName).HasMaxLength(50);
+            entity.Property(e => e.LastName).HasMaxLength(50);
+            entity.Property(e => e.MiddleName).HasMaxLength(50);
             entity.Property(e => e.Password).HasMaxLength(256);
             entity.Property(e => e.Role)
                 .HasMaxLength(50)

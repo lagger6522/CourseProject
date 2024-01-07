@@ -9,6 +9,9 @@ export class RegisterPage extends Component {
         super(props);
 
         this.state = {
+            firstName: '',
+            lastName: '',
+            middleName: '',
             email: '',
             password: '',
             confirmPassword: '',
@@ -21,25 +24,23 @@ export class RegisterPage extends Component {
         const { name, value } = event.target;
         this.setState({ [name]: value });
     };
+
     handleSubmit = async (event) => {
         event.preventDefault();
 
-        const { email, password, confirmPassword } = this.state;
+        const { firstName, lastName, middleName, email, password, confirmPassword } = this.state;
 
-        // Проверка наличия введенных данных
-        if (!email || !password || !confirmPassword) {
+        if (!firstName || !lastName || !middleName || !email || !password || !confirmPassword) {
             this.setState({ errorMessage: 'Пожалуйста, заполните все поля' });
             return;
         }
 
-        // Проверка валидности email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             this.setState({ errorMessage: 'Введите корректный адрес электронной почты' });
             return;
         }
 
-        // Проверка валидности пароля
         if (password.length < 8 || !/\d/.test(password) || !/[a-zA-Z]/.test(password)) {
             this.setState({
                 errorMessage: 'Пароль должен содержать минимум 8 символов, включая буквы и цифры',
@@ -52,17 +53,14 @@ export class RegisterPage extends Component {
             return;
         }
 
-        sendRequest("/api/User/Register", "POST", { email, password }, null)
+        sendRequest("/api/User/Register", "POST", { firstName, lastName, middleName, email, password }, null)
             .then(response => {
-                // Проверка успешного ответа
                 if (response.message) {
-                    // Регистрация успешна, выполните необходимые действия
                     window.location.href = "/authentication/LoginPage";
                 }
             })
             .catch(error => {
                 if (error.response && error.response.data) {
-                    // Вывести сообщение об ошибке на основе ответа сервера
                     const errorMessage = error.response.data.message || 'Произошла ошибка при входе. Пожалуйста, попробуйте снова.';
                     this.setState({ errorMessage });
 
@@ -73,17 +71,39 @@ export class RegisterPage extends Component {
                     console.error('Произошла ошибка при входе:', error);
                     this.setState({ errorMessage: 'Что-то пошло не так, возможно эта почто уже зарегистрированна.' });
                 }
-            });            
-    };  
-    GetAllUsers() {
-        sendRequest('/api/User/GetUsers', 'GET', null, null).then(n => { console.log(n); this.setState({ Users: n }) });        
-    }
+            });
+    };
+
     render() {
-        const { email, password, confirmPassword, errorMessage } = this.state;
+        const { firstName, lastName, middleName, email, password, confirmPassword, errorMessage } = this.state;
 
         return (
             <div>
-                <form className="form" onSubmit={this.handleSubmit}>                  
+                <form className="form" onSubmit={this.handleSubmit}>
+                    <input
+                        className="input"
+                        type="text"
+                        name="firstName"
+                        placeholder="Имя"
+                        value={firstName}
+                        onChange={this.handleInputChange}
+                    />
+                    <input
+                        className="input"
+                        type="text"
+                        name="lastName"
+                        placeholder="Фамилия"
+                        value={lastName}
+                        onChange={this.handleInputChange}
+                    />
+                    <input
+                        className="input"
+                        type="text"
+                        name="middleName"
+                        placeholder="Отчество"
+                        value={middleName}
+                        onChange={this.handleInputChange}
+                    />
                     <input
                         className="input"
                         type="email"
@@ -91,7 +111,7 @@ export class RegisterPage extends Component {
                         placeholder="Ваш e-mail"
                         value={email}
                         onChange={this.handleInputChange}
-                    />                    
+                    />
                     <input
                         className="input"
                         type="password"
@@ -117,3 +137,5 @@ export class RegisterPage extends Component {
         );
     }
 }
+
+export default RegisterPage;
