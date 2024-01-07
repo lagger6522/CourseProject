@@ -1,4 +1,6 @@
-﻿public class HospitalDto
+﻿namespace CourseProject.Model;
+
+public class HospitalDto
 {
 	public string ClinicName { get; set; } = null!;
 	public string AddressCity { get; set; } = null!;
