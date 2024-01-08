@@ -163,6 +163,7 @@ export class PolyAdd extends Component {
                         >
                             <option value="adult">Взрослая</option>
                             <option value="pediatric">Детская</option>
+                            <option value="Specialized">Специализированная</option>
                         </select>
                     </div>
                     {this.state.duplicateWarning && (
