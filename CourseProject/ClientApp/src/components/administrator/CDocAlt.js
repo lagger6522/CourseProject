@@ -13,6 +13,8 @@ export class CDocAlt extends Component {
             lastName: '',
             middleName: '',
             email: '',
+            selectedHospital: '',
+            hospitals: [],
             errorMessage: '',
             successMessage: '',
         };
@@ -20,6 +22,7 @@ export class CDocAlt extends Component {
 
     componentDidMount() {
         this.loadChiefDoctors();
+        this.loadHospitals();
     }
 
     loadChiefDoctors = () => {
@@ -34,6 +37,16 @@ export class CDocAlt extends Component {
             });
     };
 
+    loadHospitals = () => {
+        sendRequest('/api/Hospital/GetHospitals', 'GET')
+            .then((hospitals) => {
+                this.setState({ hospitals });
+            })
+            .catch((error) => {
+                console.error('Error loading hospitals:', error);
+            });
+    };
+
     handleChiefDoctorChange = (e) => {
         const selectedChiefDoctor = e.target.value;
         const selectedDoctor = this.state.chiefDoctors.find((doctor) => doctor.email === selectedChiefDoctor);
@@ -44,6 +57,7 @@ export class CDocAlt extends Component {
             lastName: selectedDoctor?.lastName || '',
             middleName: selectedDoctor?.middleName || '',
             email: selectedDoctor?.email || '',
+            selectedHospital: selectedDoctor?.hospitalID || '',
             errorMessage: '',
         });
     };
@@ -51,7 +65,7 @@ export class CDocAlt extends Component {
     handleFormSubmit = (e) => {
         e.preventDefault();
 
-        const { selectedChiefDoctor, firstName, lastName, middleName, email } = this.state;
+        const { selectedChiefDoctor, firstName, lastName, middleName, email, selectedHospital } = this.state;
 
         if (!selectedChiefDoctor) {
             this.setState({ errorMessage: 'Пожалуйста, выберите главврача.' });
@@ -76,6 +90,7 @@ export class CDocAlt extends Component {
             lastName,
             middleName,
             email,
+            hospitalID: selectedHospital,
         };
 
         sendRequest('api/User/UpdateChiefDoctor', 'POST', requestData)
@@ -163,6 +178,23 @@ export class CDocAlt extends Component {
                             onChange={(e) => this.setState({ email: e.target.value })}
                             required
                         />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="hospitalSelect">Выберите больницу</label>
+                        <select
+                            id="hospitalSelect"
+                            name="hospitalSelect"
+                            value={this.state.selectedHospital}
+                            onChange={(e) => this.setState({ selectedHospital: e.target.value })}
+                            required
+                        >
+                            <option value="" disabled>Select a hospital</option>
+                            {this.state.hospitals.map((hospital) => (
+                                <option key={hospital.hospitalID} value={hospital.hospitalID}>
+                                    {hospital.clinicName}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div className="form-group">
                         <input type="submit" value="Изменить" style={{ width: '100%' }} />

@@ -128,44 +128,54 @@ namespace Store.controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<ChiefDoctorModel>>> GetAllChiefDoctors()
+		public IActionResult GetAllChiefDoctors()
 		{
-			return await _context.Users
+			var chiefDoctors = _context.Users
 				.Where(u => u.Role == "Chief Medical Officer")
-				.Select(u => new ChiefDoctorModel
+				.Select(u => new
 				{
-					FirstName = u.FirstName,
-					LastName = u.LastName,
-					MiddleName = u.MiddleName,
-					Email = u.Email
+					u.Email,
+					u.FirstName,
+					u.LastName,
+					u.MiddleName,
+					u.HospitalId
 				})
-				.ToListAsync();
+				.ToList();
+
+			return Ok(chiefDoctors);
 		}
 
 		[HttpPost]
 		public async Task<IActionResult> UpdateChiefDoctor([FromBody] ChiefDoctorUpdateModel model)
 		{
-			var chiefDoctor = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.OriginalEmail);
+			var existingDoctor = _context.Users.FirstOrDefault(u => u.Email == model.OriginalEmail && u.Role == "Chief Medical Officer");
 
-			if (chiefDoctor == null)
+			if (existingDoctor == null)
 			{
-				return NotFound();
+				return NotFound(new { message = "Главврач не найден" });
 			}
 
-			chiefDoctor.FirstName = model.FirstName;
-			chiefDoctor.LastName = model.LastName;
-			chiefDoctor.MiddleName = model.MiddleName;
-			chiefDoctor.Email = model.Email;
+			// Проверка уникальности почты (если email изменился)
+			if (model.Email != model.OriginalEmail && _context.Users.Any(u => u.Email == model.Email))
+			{
+				return BadRequest(new { message = "Пользователь с таким адресом электронной почты уже существует" });
+			}
 
-			try
+			// Проверка, что для данной больницы нет уже главврача
+			if (model.HospitalId != existingDoctor.HospitalId && _context.Users.Any(u => u.HospitalId == model.HospitalId && u.Role == "Chief Medical Officer"))
 			{
-				await _context.SaveChangesAsync();
-				return Ok(new { message = "Данные главврача обновлены успешно." });
+				return BadRequest(new { message = "Для этой больницы уже существует главврач" });
 			}
-			catch (DbUpdateConcurrencyException)
-			{
-				return BadRequest("Ошибка при сохранении данных.");
-			}
+
+			existingDoctor.FirstName = model.FirstName;
+			existingDoctor.LastName = model.LastName;
+			existingDoctor.MiddleName = model.MiddleName;
+			existingDoctor.Email = model.Email;
+			existingDoctor.HospitalId = model.HospitalId;
+
+			await _context.SaveChangesAsync();
+
+			return Ok(new { message = "Данные главврача успешно изменены" });
 		}
 
 		[HttpPost]
