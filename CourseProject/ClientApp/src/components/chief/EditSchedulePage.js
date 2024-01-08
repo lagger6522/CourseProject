@@ -48,12 +48,13 @@ export class EditSchedulePage extends Component {
     };
 
     handleTimeChange = (dayIndex, field, event) => {
-        const { schedule } = this.state;
+        const { schedule, daysOfWeek } = this.state;
         const updatedSchedule = [...schedule];
         if (!updatedSchedule[dayIndex]) {
-            updatedSchedule[dayIndex] = { DayOfWeek: '', StartTime: '', EndTime: '', LunchBreakStart: '', LunchBreakEnd: '' };
+            updatedSchedule[dayIndex] = { dayOfWeek: daysOfWeek[dayIndex], startTime: '', endTime: '', lunchBreakStart: '', lunchBreakEnd: '' };
         }
         updatedSchedule[dayIndex][field] = event.target.value;
+        console.log(dayIndex, field, updatedSchedule);
         this.setState({ schedule: updatedSchedule });
     };
 
@@ -93,32 +94,32 @@ export class EditSchedulePage extends Component {
                                     <label>Начало рабочего для:</label>
                                     <input
                                         type="time"
-                                        value={schedule[dayIndex] ? schedule[dayIndex][1] : ''}
-                                        onChange={event => this.handleTimeChange(dayIndex, 1, event)}
+                                        value={schedule[dayIndex] ? schedule[dayIndex]["startTime"] : ''}
+                                        onChange={event => this.handleTimeChange(dayIndex, "startTime", event)}
                                     />
                                 </td>
                                 <td>
                                     <label>Конец рабочего для:</label>
                                     <input
                                         type="time"
-                                        value={schedule[dayIndex] ? schedule[dayIndex][2] : ''}
-                                        onChange={event => this.handleTimeChange(dayIndex, 2, event)}
+                                        value={schedule[dayIndex] ? schedule[dayIndex]["endTime"] : ''}
+                                        onChange={event => this.handleTimeChange(dayIndex, "endTime", event)}
                                     />
                                 </td>
                                 <td>
                                     <label>Обед с:</label>
                                     <input
                                         type="time"
-                                        value={schedule[dayIndex] ? schedule[dayIndex][3] : ''}
-                                        onChange={event => this.handleTimeChange(dayIndex, 3, event)}
+                                        value={schedule[dayIndex] ? schedule[dayIndex]["lunchBreakStart"] : ''}
+                                        onChange={event => this.handleTimeChange(dayIndex, "lunchBreakStart", event)}
                                     />
                                 </td>
                                 <td>
                                     <label>По:</label>
                                     <input
                                         type="time"
-                                        value={schedule[dayIndex] ? schedule[dayIndex][4] : ''}
-                                        onChange={event => this.handleTimeChange(dayIndex, 4, event)}
+                                        value={schedule[dayIndex] ? schedule[dayIndex]["lunchBreakEnd"] : ''}
+                                        onChange={event => this.handleTimeChange(dayIndex, "lunchBreakEnd", event)}
                                     />
                                 </td>
                             </tr>
