@@ -253,9 +253,9 @@ export class PolyAlt extends Component {
                                     type="radio"
                                     id="typeSpecialized"
                                     name="type"
-                                    value="specialized"
-                                    checked={this.state.type === 'specialized'}
-                                    onChange={() => this.setState({ type: 'specialized' })}
+                                    value="Specialized"
+                                    checked={this.state.type === 'Specialized'}
+                                    onChange={() => this.setState({ type: 'Specialized' })}
                                     required
                                 /> Специализированная
                             </label>

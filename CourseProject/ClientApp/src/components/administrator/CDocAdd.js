@@ -13,9 +13,21 @@ export class CDocAdd extends Component {
             firstName: '',
             lastName: '',
             middleName: '',
+            selectedHospital: null,
+            hospitals: [],
             errorMessage: null,
             successMessage: '',
         };
+    }
+
+    componentDidMount() {
+        sendRequest('/api/Hospital/GetHospitals', 'GET')
+            .then((data) => {
+                this.setState({ hospitals: data });
+            })
+            .catch((error) => {
+                console.error('Error fetching hospital list:', error);
+            });
     }
 
     handleInputChange = (event) => {
@@ -26,10 +38,10 @@ export class CDocAdd extends Component {
     handleSubmit = async (event) => {
         event.preventDefault();
 
-        const { email, password, confirmPassword, firstName, lastName, middleName } = this.state;
+        const { email, password, confirmPassword, firstName, lastName, middleName, selectedHospital } = this.state;
 
-        if (!email || !password || !confirmPassword || !firstName || !lastName || !middleName) {
-            this.setState({ errorMessage: 'Пожалуйста, заполните все поля' });
+        if (!email || !password || !confirmPassword || !firstName || !lastName || !middleName || !selectedHospital) {
+            this.setState({ errorMessage: 'Пожалуйста, заполните все поля, включая выбор больницы' });
             return;
         }
 
@@ -58,8 +70,9 @@ export class CDocAdd extends Component {
             firstName,
             lastName,
             middleName,
+            hospitalID: selectedHospital,
         })
-            .then(response => {
+            .then((response) => {
                 if (response.message) {
                     this.setState({ successMessage: 'Главврач успешно добавлен.' });
 
@@ -69,20 +82,20 @@ export class CDocAdd extends Component {
                     console.log('Главврач добавлен успешно:', response);
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Ошибка добавления главврача:', error);
                 this.setState({ errorMessage: 'Что-то пошло не так при добавлении главврача.' });
             });
     };
 
     render() {
-        const { email, password, confirmPassword, firstName, lastName, middleName, errorMessage } = this.state;
+        const { email, password, confirmPassword, firstName, lastName, middleName, errorMessage, successMessage, selectedHospital, hospitals } = this.state;
 
         return (
             <div>
-                {this.state.successMessage && (
+                {successMessage && (
                     <div className="success-message-container">
-                        <p className="success-message">{this.state.successMessage}</p>
+                        <p className="success-message">{successMessage}</p>
                     </div>
                 )}
                 <form className="form" onSubmit={this.handleSubmit}>
@@ -139,7 +152,23 @@ export class CDocAdd extends Component {
                         value={confirmPassword}
                         onChange={this.handleInputChange}
                         required
-                    />                    
+                    />
+                    <select
+                        className="input"
+                        name="selectedHospital"
+                        value={selectedHospital}
+                        onChange={this.handleInputChange}
+                        required
+                    >
+                        <option value="" disabled hidden>
+                            Выберите больницу
+                        </option>
+                        {hospitals.map((hospital) => (
+                            <option key={hospital.hospitalID} value={hospital.hospitalID}>
+                                {hospital.clinicName}
+                            </option>
+                        ))}
+                    </select>
                     <button className="btn" type="submit">
                         Добавить главврача
                     </button>

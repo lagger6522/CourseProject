@@ -269,41 +269,52 @@ namespace Store.controllers
 			}
 			catch (Exception ex)
 			{
-				// Log the exception or handle it as needed
 				Console.Error.WriteLine($"Error retrieving doctors: {ex.Message}");
 				return StatusCode(500, "Internal Server Error");
 			}
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> AddChiefDoctor([FromBody] ChiefDoctorModel model)
+		public IActionResult AddChiefDoctor([FromBody] ChiefDoctorModel model)
 		{
-			if (model == null)
+			try
 			{
-				return BadRequest("Invalid data");
+				var hospital = _context.Hospitals.Find(model.HospitalId);
+				if (hospital == null)
+				{
+					return NotFound("Больница не найдена");
+				}
+
+				if (_context.Users.Any(u => u.Email == model.Email))
+				{
+					return BadRequest(new { message = "Пользователь с таким адресом электронной почты уже существует" });
+				}
+
+				if (_context.Users.Any(u => u.HospitalId == model.HospitalId && u.Role == "Chief Medical Officer"))
+				{
+					return BadRequest(new { message = "Для этой больницы уже существует главврач" });
+				}
+
+				var chiefDoctor = new User
+				{
+					FirstName = model.FirstName,
+					LastName = model.LastName,
+					MiddleName = model.MiddleName,
+					Email = model.Email,
+					Password = model.Password,
+					Role = "Chief Medical Officer",
+					HospitalId = model.HospitalId
+				};
+
+				_context.Users.Add(chiefDoctor);
+				_context.SaveChanges();
+
+				return Ok(new { message = "Главврач успешно добавлен" });
 			}
-
-			if (await _context.Users.AnyAsync(u => u.Email == model.Email))
+			catch (Exception ex)
 			{
-				Console.WriteLine($"Пользователь с email '{model.Email}' уже существует.");
-				ModelState.AddModelError("Email", "Пользователь с таким email уже существует.");
-				return Problem("Пользователь с таким email уже существует.");
+				return StatusCode(500, $"Внутренняя ошибка сервера: {ex.Message}");
 			}
-
-			var chiefDoctor = new User
-			{
-				FirstName = model.FirstName,
-				LastName = model.LastName,
-				MiddleName = model.MiddleName,
-				Password = HashPassword(model.Password),
-				Email = model.Email,
-				Role = "Chief Medical Officer"
-			};
-
-			_context.Users.Add(chiefDoctor);
-			await _context.SaveChangesAsync();
-
-			return Json(new { message = "Главврач добавлен успешно." });
 		}
 
 		private string HashPassword(string password)
