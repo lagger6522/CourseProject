@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 export class Home extends Component {
-  static displayName = Home.name;
+    static displayName = Home.name;
 
     constructor(props) {
         super(props);
@@ -31,14 +32,21 @@ export class Home extends Component {
         const { showMessage, message } = this.state;
 
         return (
-
-          <div>
+            <div>
                 {showMessage && (
                     <div className="success-message-container">
                         <p className="success-message">{message}</p>
                     </div>
                 )}
-          </div>
-    );
-  }
+
+                <div>
+                    <h2>Welcome to the Appointment System</h2>
+                    <p>Manage your appointments easily with our system.</p>
+                    <Link to="/appointment">
+                        <button>Order Appointment</button>
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 }

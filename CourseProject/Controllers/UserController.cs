@@ -273,9 +273,40 @@ namespace Store.controllers
 		}
 
 
+		[HttpPost]
+		public async Task<IActionResult> AddChiefDoctor([FromBody] ChiefDoctorModel model)
+		{
+			if (model == null)
+			{
+				return BadRequest("Invalid data");
+			}
+
+			if (await _context.Users.AnyAsync(u => u.Email == model.Email))
+			{
+				Console.WriteLine($"Пользователь с email '{model.Email}' уже существует.");
+				ModelState.AddModelError("Email", "Пользователь с таким email уже существует.");
+				return Problem("Пользователь с таким email уже существует.");
+			}
+
+			var chiefDoctor = new User
+			{
+				FirstName = model.FirstName,
+				LastName = model.LastName,
+				MiddleName = model.MiddleName,
+				Password = HashPassword(model.Password),
+				Email = model.Email,
+				Role = "Chief Medical Officer"
+			};
+
+			_context.Users.Add(chiefDoctor);
+			await _context.SaveChangesAsync();
+
+			return Json(new { message = "Главврач добавлен успешно." });
+		}
+
 		private string HashPassword(string password)
 		{
-			return password;
+			return password; 
 		}
 
 		public async Task<IEnumerable<User>> GetUsersAsync()
