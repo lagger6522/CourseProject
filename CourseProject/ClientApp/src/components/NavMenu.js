@@ -70,8 +70,18 @@ export class NavMenu extends Component {
                 this.setState({ message: '' });
             }, 2000);
         }
+            let role= sessionStorage.getItem("role") || "User";
+        let home = "/";
+        if (role === 'User') {
+            home = "/"
+        } else if (role === 'Admin') {
+            home = "/administrator/AdminPage"
+        } else if (role === 'Chief Medical Officer') {
+            home = "/chief/ChiefPage"
+        } else {
+            home = "/manager/ManagerPage"
+        }
       return (
-       
       <header>
               {this.state.message && (
                   <div className="success-message-container">
@@ -79,7 +89,7 @@ export class NavMenu extends Component {
                   </div>
               )}
         <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" container light>
-          <NavbarBrand tag={Link} to="/">CourseProject</NavbarBrand>
+          <NavbarBrand tag={Link} to={home} >CourseProject</NavbarBrand>
           <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
           <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
                      
