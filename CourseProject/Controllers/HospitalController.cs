@@ -72,6 +72,50 @@ namespace Store.controllers
 		}
 
 		[HttpGet]
+		public async Task<IActionResult> GetHospitals(
+		string sortedField = "ClinicName",
+		string sortOrder = "asc",
+		string searchTerm = "",
+		string filterType = "All")
+		{
+			IQueryable<Hospital> query = _context.Hospitals;
+
+			// Фильтрация
+			if (filterType != "All")
+			{
+				query = query.Where(h => h.ClinicType == filterType);
+			}
+
+			// Поиск
+			if (!string.IsNullOrEmpty(searchTerm))
+			{
+				query = query.Where(h =>
+					EF.Functions.Like(h.ClinicName, $"%{searchTerm}%") ||
+					EF.Functions.Like(h.City, $"%{searchTerm}%") ||
+					EF.Functions.Like(h.RegistrationNumber, $"%{searchTerm}%"));
+				// Добавьте дополнительные поля, по которым хотите осуществлять поиск
+			}
+
+			// Сортировка
+			switch (sortedField)
+			{
+				case "City":
+					query = sortOrder == "asc" ? query.OrderBy(h => h.City) : query.OrderByDescending(h => h.City);
+					break;
+				case "RegistrationNumber":
+					query = sortOrder == "asc" ? query.OrderBy(h => h.RegistrationNumber) : query.OrderByDescending(h => h.RegistrationNumber);
+					break;
+				// Добавьте дополнительные поля для сортировки
+				default:
+					query = sortOrder == "asc" ? query.OrderBy(h => h.ClinicName) : query.OrderByDescending(h => h.ClinicName);
+					break;
+			}
+
+			var hospitals = await query.ToListAsync();
+			return Ok(hospitals);
+		}
+
+		[HttpGet]
 		public async Task<ActionResult<Hospital>> GetHospitalByClinicName(string clinicName)
 		{
 			var hospital = await _context.Hospitals.FirstOrDefaultAsync(h => h.ClinicName == clinicName);
