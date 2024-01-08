@@ -2,16 +2,20 @@ import React, { Component } from 'react';
 import sendRequest from '../SendRequest';
 
 export class EditSchedulePage extends Component {
+
     constructor(props) {
         super(props);
-
+        const queryParameters = new URLSearchParams(window.location.search)
+        const userId = queryParameters.get("userId")
         this.state = {
-            doctorId: this.props.match.params.id,
-            schedule: [], // Добавьте расписание в состояние компонента
-            newDay: '', // Добавьте новый день и время в состояние
+            doctorId: userId,
+            schedule: [],
+            daysOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+            newDay: '',
             newTime: '',
             errorMessage: '',
-        };
+
+        };        
     }
 
     componentDidMount() {
@@ -21,7 +25,7 @@ export class EditSchedulePage extends Component {
     loadDoctorSchedule = () => {
         const { doctorId } = this.state;
 
-        sendRequest(`/api/Schedule/GetDoctorSchedule/${doctorId}`, 'GET')
+        sendRequest(`/api/Schedule/GetDoctorSchedule`, 'GET', null, { doctorId } )
             .then(schedule => {
                 this.setState({ schedule, errorMessage: '' });
             })
@@ -37,7 +41,6 @@ export class EditSchedulePage extends Component {
         sendRequest(`/api/Schedule/UpdateDoctorSchedule/${doctorId}`, 'POST', { schedule })
             .then(() => {
                 console.log('Doctor schedule updated successfully.');
-                // Возможно, вы захотите перенаправить пользователя после успешного сохранения
             })
             .catch(error => {
                 console.error('Error updating doctor schedule:', error);
@@ -45,10 +48,13 @@ export class EditSchedulePage extends Component {
             });
     };
 
-    handleTimeChange = (dayIndex, timeIndex, event) => {
+    handleTimeChange = (dayIndex, field, event) => {
         const { schedule } = this.state;
         const updatedSchedule = [...schedule];
-        updatedSchedule[dayIndex][timeIndex] = event.target.value;
+        if (!updatedSchedule[dayIndex]) {
+            updatedSchedule[dayIndex] = { DayOfWeek: '', StartTime: '', EndTime: '', LunchBreakStart: '', LunchBreakEnd: '' };
+        }
+        updatedSchedule[dayIndex][field] = event.target.value;
         this.setState({ schedule: updatedSchedule });
     };
 
@@ -68,8 +74,7 @@ export class EditSchedulePage extends Component {
     };
 
     render() {
-        const { schedule, newDay, newTime, errorMessage } = this.state;
-
+        const { schedule, newDay, newTime, errorMessage, daysOfWeek } = this.state;
         return (
             <div className="edit-schedule-container">
                 <h2>Edit Doctor Schedule</h2>
@@ -77,33 +82,51 @@ export class EditSchedulePage extends Component {
                 <table>
                     <thead>
                         <tr>
-                            <th>Day</th>
-                            <th>Time</th>
+                            <th>День</th>
+                            <th>Время</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {schedule.map((day, dayIndex) => (
+                        {daysOfWeek.map((day, dayIndex) => (
                             <tr key={dayIndex}>
-                                <td>{day[0]}</td>
+                                <td>{day}</td>
                                 <td>
+                                    <label>Начало рабочего для:</label>
                                     <input
-                                        type="text"
-                                        value={day[1]}
+                                        type="time"
+                                        value={schedule[dayIndex] ? schedule[dayIndex][1] : ''}
                                         onChange={event => this.handleTimeChange(dayIndex, 1, event)}
+                                    />
+                                </td>
+                                <td>
+                                    <label>Конец рабочего для:</label>
+                                    <input
+                                        type="time"
+                                        value={schedule[dayIndex] ? schedule[dayIndex][2] : ''}
+                                        onChange={event => this.handleTimeChange(dayIndex, 2, event)}
+                                    />
+                                </td>
+                                <td>
+                                    <label>Обед с:</label>
+                                    <input
+                                        type="time"
+                                        value={schedule[dayIndex] ? schedule[dayIndex][3] : ''}
+                                        onChange={event => this.handleTimeChange(dayIndex, 3, event)}
+                                    />
+                                </td>
+                                <td>
+                                    <label>По:</label>
+                                    <input
+                                        type="time"
+                                        value={schedule[dayIndex] ? schedule[dayIndex][4] : ''}
+                                        onChange={event => this.handleTimeChange(dayIndex, 4, event)}
                                     />
                                 </td>
                             </tr>
                         ))}
                     </tbody>
-                </table>
-                <div>
-                    <h3>Add New Schedule Item</h3>
-                    <label>Day:</label>
-                    <input type="text" value={newDay} onChange={this.handleNewDayChange} />
-                    <label>Time:</label>
-                    <input type="text" value={newTime} onChange={this.handleNewTimeChange} />
-                    <button onClick={this.handleAddSchedule}>Add</button>
-                </div>
+
+                </table>                
                 <button onClick={this.handleSaveSchedule}>Save Schedule</button>
             </div>
         );

@@ -20,7 +20,7 @@ export default class App extends Component {
           })}
           <Route path="/patients" element={<AddPatientForm />} />
           <Route path="/patients-list" element={<PatientList />} />
-          <Route path="/schedule/edit/:UserId" element={<EditSchedulePage />} />
+          <Route path="/schedule/edit" element={<EditSchedulePage />} />     
 
         </Routes>
       </Layout>

@@ -250,7 +250,7 @@ namespace Store.controllers
 			{
 				var doctors = _context.Users
 					.Where(u => u.Role == "Doctor")
-					.Select(u => new
+					.Select(u => new 
 					{
 						UserId = u.UserId,
 						FirstName = u.FirstName,
