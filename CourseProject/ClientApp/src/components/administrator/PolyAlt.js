@@ -17,6 +17,7 @@ export class PolyAlt extends Component {
             schedule: '',
             type: 'adult',
             duplicateWarning: '',
+            successMessage: '',
         };
     }
 
@@ -84,6 +85,11 @@ export class PolyAlt extends Component {
 
             sendRequest('api/Hospital/UpdateHospital', 'POST', requestData)
                 .then((data) => {
+                    this.setState({ successMessage: 'Данные поликлиники успешно изменены.' });
+
+                    setTimeout(() => {
+                        this.setState({ successMessage: '' });
+                    }, 2000);
                     console.log('Hospital updated successfully:', data);
                 })
                 .catch((error) => {
@@ -107,6 +113,11 @@ export class PolyAlt extends Component {
 
                         sendRequest('api/Hospital/UpdateHospital', 'POST', requestData)
                             .then((data) => {
+                                this.setState({ successMessage: 'Данные поликлиники успешно изменены.' });
+
+                                setTimeout(() => {
+                                    this.setState({ successMessage: '' });
+                                }, 2000);
                                 console.log('Hospital updated successfully:', data);
                             })
                             .catch((error) => {
@@ -128,6 +139,11 @@ export class PolyAlt extends Component {
     render() {
         return (
             <div className="form-container">
+                {this.state.successMessage && (
+                    <div className="success-message-container">
+                        <p className="success-message">{this.state.successMessage}</p>
+                    </div>
+                )}
                 <h2>Изменение данных клиники</h2>
                 <form onSubmit={this.handleFormSubmit}>
                     <div className="form-group">

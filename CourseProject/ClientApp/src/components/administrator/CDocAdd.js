@@ -14,6 +14,7 @@ export class CDocAdd extends Component {
             lastName: '',
             middleName: '',
             errorMessage: null,
+            successMessage: '',
         };
     }
 
@@ -60,6 +61,11 @@ export class CDocAdd extends Component {
         })
             .then(response => {
                 if (response.message) {
+                    this.setState({ successMessage: 'Главврач успешно добавлен.' });
+
+                    setTimeout(() => {
+                        this.setState({ successMessage: '' });
+                    }, 2000);
                     console.log('Главврач добавлен успешно:', response);
                 }
             })
@@ -74,6 +80,11 @@ export class CDocAdd extends Component {
 
         return (
             <div>
+                {this.state.successMessage && (
+                    <div className="success-message-container">
+                        <p className="success-message">{this.state.successMessage}</p>
+                    </div>
+                )}
                 <form className="form" onSubmit={this.handleSubmit}>
                     <input
                         className="input"
