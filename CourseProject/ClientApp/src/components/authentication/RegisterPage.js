@@ -57,6 +57,7 @@ export class RegisterPage extends Component {
             .then(response => {
                 if (response.message) {
                     window.location.href = "/authentication/LoginPage";
+                    sessionStorage.setItem("redirectMessage", "Вы успешно зарегистрировались!");
                 }
             })
             .catch(error => {

@@ -10,7 +10,24 @@ export class LoginPage extends Component {
             email: '',
             password: '',
             errorMessage: null,
+            showMessage: false,
+            message: ''
         };
+    }
+
+    componentDidMount() {
+        const redirectMessage = sessionStorage.getItem("redirectMessage");
+
+        if (redirectMessage) {
+            const message = redirectMessage;
+
+            this.setState({ showMessage: true, message });
+
+            setTimeout(() => {
+                this.setState({ showMessage: false, message: "" });
+                sessionStorage.removeItem("redirectMessage");
+            }, 2000);
+        }
     }
 
     handleInputChange = (e) => {
@@ -49,10 +66,17 @@ export class LoginPage extends Component {
     }
 
     render() {
+        const { showMessage, message } = this.state;
         const { email, password, errorMessage } = this.state;
 
         return (
             <div>
+                {showMessage && (
+                    <div className="success-message-container">
+                        <p className="success-message">{message}</p>
+                    </div>
+                )}
+
                 <form className="form" onSubmit={this.handleLogin}>
                     <input
                         className="input"

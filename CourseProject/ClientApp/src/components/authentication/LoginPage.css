@@ -54,3 +54,12 @@ body {
     color: white;
     padding: 10px;
 }
+
+.button-container .admin-button:not(:last-child) {
+    margin-bottom: 10px; /* Изменено на "10px" */
+}
+
+.button-container .admin-button:hover {
+    background-color: #e38c3b;
+    color: #fff;
+}
