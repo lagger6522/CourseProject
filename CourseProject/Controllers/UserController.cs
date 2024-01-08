@@ -276,28 +276,68 @@ namespace Store.controllers
 			}
 		}
 
+		[HttpPost]
+		public async Task<IActionResult> AddChiefDoctor([FromBody] ChiefDoctorModel model)
+		{
+			if (model == null)
+			{
+				return BadRequest("Invalid data");
+			}
+
+			if (await _context.Users.AnyAsync(u => u.Email == model.Email))
+			{
+				Console.WriteLine($"Пользователь с email '{model.Email}' уже существует.");
+				ModelState.AddModelError("Email", "Пользователь с таким email уже существует.");
+				return Problem("Пользователь с таким email уже существует.");
+			}
+
+			var chiefDoctor = new User
+			{
+				FirstName = model.FirstName,
+				LastName = model.LastName,
+				MiddleName = model.MiddleName,
+				Password = HashPassword(model.Password),
+				Email = model.Email,
+				Role = "Chief Medical Officer"
+			};
+
+			_context.Users.Add(chiefDoctor);
+			await _context.SaveChangesAsync();
+
+			return Json(new { message = "Главврач добавлен успешно." });
+		}
+
+		private string HashPassword(string password)
+		{
+			return password; 
+		}
+
+		public async Task<IEnumerable<User>> GetUsersAsync()
+		{
+			return await _context.Users.ToListAsync();
+		}
         [HttpPost]
         public async Task<IActionResult> SendCodeToEmail(string email)
         {
-			codes.Where(n => n.Value.expireTime > DateTime.Now)
-				.ToList().ForEach(n => codes.Remove(n.Key));
+            codes.Where(n => n.Value.expireTime > DateTime.Now)
+                .ToList().ForEach(n => codes.Remove(n.Key));
             var user = _context.Users.FirstOrDefault(u => u.Email == email);
-			if (user == null) return Json(new { error = $"Пользователь с таким email не существует" });
+            if (user == null) return Json(new { error = $"Пользователь с таким email не существует" });
             string code = ((int)(Math.Floor(246 + random.NextDouble() * DateTime.Now.Ticks) % 1000000)).ToString();
-			if (codes.ContainsKey(email))
-			{
-				codes[email] = (code, DateTime.Now.AddMinutes(5));
+            if (codes.ContainsKey(email))
+            {
+                codes[email] = (code, DateTime.Now.AddMinutes(5));
             }
-			else
-			{
+            else
+            {
                 codes.Add(email, (code, DateTime.Now.AddMinutes(5)));
             }
-			if(await MailWorker.SendMessage(email, "Код подтверждения", code))
-			{
-				return Json(new {message=$"На email {email} был отправлен код подтверждения"});
-			}
-			else
-			{
+            if (await MailWorker.SendMessage(email, "Код подтверждения", code))
+            {
+                return Json(new { message = $"На email {email} был отправлен код подтверждения" });
+            }
+            else
+            {
                 return Json(new { error = $"Не удалось отправить код на email {email}" });
             }
         }
@@ -310,15 +350,15 @@ namespace Store.controllers
             if (user == null) return Json(new { error = $"Пользователь с таким email не существует" });
             if (codes.ContainsKey(email))
             {
-				if (codes[email].code == code)
-				{
-					codes.Remove(email);
+                if (codes[email].code == code)
+                {
+                    codes.Remove(email);
                     var token = GenerateToken(user);
 
                     ClaimsIdentity identity = new ClaimsIdentity(new Claim[]
                     {
-						new Claim("ClaimTypes.UserId", user.UserId.ToString()),
-						new Claim(ClaimTypes.Role, user.Role),
+                        new Claim("ClaimTypes.UserId", user.UserId.ToString()),
+                        new Claim(ClaimTypes.Role, user.Role),
                     },
                     CookieAuthenticationDefaults.AuthenticationScheme);
                     ClaimsPrincipal principal = new ClaimsPrincipal(identity);
@@ -330,16 +370,5 @@ namespace Store.controllers
             }
             return Json(new { error = $"Код устарел попробуйте снова" });
         }
-
-        private string HashPassword(string password)
-		{
-			return password;
-		}
-
-		public async Task<IEnumerable<User>> GetUsersAsync()
-		{
-			return await _context.Users.ToListAsync();
-		}
-
-	}
+    }
 }	

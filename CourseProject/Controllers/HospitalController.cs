@@ -72,6 +72,12 @@ namespace Store.controllers
 		}
 
 		[HttpGet]
+		public IEnumerable<Hospital> GetHospitals()
+		{
+			return _context.Hospitals;
+		}
+
+		[HttpGet]
 		public async Task<ActionResult<Hospital>> GetHospitalByClinicName(string clinicName)
 		{
 			var hospital = await _context.Hospitals.FirstOrDefaultAsync(h => h.ClinicName == clinicName);

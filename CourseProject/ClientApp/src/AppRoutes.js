@@ -15,6 +15,7 @@ import { CDocAlt } from "./components/administrator/CDocAlt";
 import { DocAdd } from "./components/chief/DocAdd";
 import { DoctorList } from "./components/chief/DoctorList";
 import { ChiefPage } from "./components/chief/ChiefPage";
+import DoctorPage from "./components/doctor/DoctorPage";
 
 const AppRoutes = [
 {
@@ -84,7 +85,11 @@ const AppRoutes = [
 {
     path: '/chief/ChiefPage',
     element: <ChiefPage />
-},
+    },
+    {
+        path: '/doctor/DoctorPage',
+        element: <DoctorPage />
+    },
 ];
 
 export default AppRoutes;

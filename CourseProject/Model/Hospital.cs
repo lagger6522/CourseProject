@@ -20,4 +20,6 @@ public partial class Hospital
     public string WorkingHours { get; set; } = null!;
 
     public string ClinicType { get; set; } = null!;
+
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

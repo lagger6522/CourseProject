@@ -10,7 +10,24 @@ export class LoginPage extends Component {
             email: '',
             password: '',
             errorMessage: null,
+            showMessage: false,
+            message: ''
         };
+    }
+
+    componentDidMount() {
+        const redirectMessage = sessionStorage.getItem("redirectMessage");
+
+        if (redirectMessage) {
+            const message = redirectMessage;
+
+            this.setState({ showMessage: true, message });
+
+            setTimeout(() => {
+                this.setState({ showMessage: false, message: "" });
+                sessionStorage.removeItem("redirectMessage");
+            }, 2000);
+        }
     }
 
     handleInputChange = (e) => {
@@ -31,13 +48,17 @@ export class LoginPage extends Component {
 
                 // Проверка роли и перенаправление
                 if (data.role === 'User') {
-                    window.location.href = "/"                  
+                    window.location.href = "/";
+                    sessionStorage.setItem("redirectMessage", "Вы успешно вошли за пользователя!");
                 } else if (data.role === 'Admin') {
-                    window.location.href = "/administrator/AdminPage"     
+                    window.location.href = "/administrator/AdminPage";
+                    sessionStorage.setItem("redirectMessage", "Вы успешно вошли за админа!");
                 } else if (data.role === 'Chief Medical Officer') {
-                    window.location.href = "/chief/ChiefPage"     
+                    window.location.href = "/chief/ChiefPage";
+                    sessionStorage.setItem("redirectMessage", "Вы успешно вошли за главврача!");
                 } else {
-                    window.location.href = "/manager/ManagerPage"
+                    window.location.href = "/doctor/DoctorPage";
+                    sessionStorage.setItem("redirectMessage", "Вы успешно вошли за врача!");
                 }
         }).catch(error => {
             this.setState({ errorMessage: error.message || "Произошла ошибка при входе. Пожалуйста, попробуйте снова." });
@@ -45,10 +66,17 @@ export class LoginPage extends Component {
     }
 
     render() {
+        const { showMessage, message } = this.state;
         const { email, password, errorMessage } = this.state;
 
         return (
             <div>
+                {showMessage && (
+                    <div className="success-message-container">
+                        <p className="success-message">{message}</p>
+                    </div>
+                )}
+
                 <form className="form" onSubmit={this.handleLogin}>
                     <input
                         className="input"

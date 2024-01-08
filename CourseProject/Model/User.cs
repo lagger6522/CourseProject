@@ -21,6 +21,10 @@ public partial class User
 
     public string? Specialization { get; set; }
 
+    public int? HospitalId { get; set; }
+
+    public virtual Hospital? Hospital { get; set; }
+
     public virtual ICollection<Patient> Patients { get; set; } = new List<Patient>();
 
     public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();

@@ -9,7 +9,9 @@ export class NavMenu extends Component {
 
   constructor (props) {
       super(props);
-      this.state = { user: null };
+      this.state = { 
+          user: null,
+          message: ''};
       this.singOut = this.singOut.bind(this);
 
     this.toggleNavbar = this.toggleNavbar.bind(this);
@@ -25,6 +27,7 @@ export class NavMenu extends Component {
     }
 
     componentDidMount() {
+
         if (sessionStorage.getItem("userId") === null) {
             sendRequest("/api/User/Check", "Get", null)
                 .then(n => {
@@ -57,11 +60,17 @@ export class NavMenu extends Component {
                 sessionStorage.removeItem("email");
                 sessionStorage.removeItem("role");
                 sessionStorage.removeItem("isAuthenticated");
+                this.state.message = "Вы успешно вышли из аккаунта!"
             }).catch(e => console.error(e))
     }
 
     render() {
-        let role = sessionStorage.getItem("role") || "User";
+        if (this.state.message) {
+            setTimeout(() => {
+                this.setState({ message: '' });
+            }, 2000);
+        }
+            let role= sessionStorage.getItem("role") || "User";
         let home = "/";
         if (role === 'User') {
             home = "/"
@@ -72,14 +81,21 @@ export class NavMenu extends Component {
         } else {
             home = "/manager/ManagerPage"
         }
-    return (
+      return (
       <header>
+              {this.state.message && (
+                  <div className="success-message-container">
+                      <p className="success-message">{this.state.message}</p>
+                  </div>
+              )}
         <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" container light>
           <NavbarBrand tag={Link} to={home} >CourseProject</NavbarBrand>
           <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
           <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
-            <ul className="navbar-nav flex-grow">
-              {sessionStorage.getItem("userId") !== null ?
+                     
+                      <ul className="navbar-nav flex-grow">
+                  
+            {sessionStorage.getItem("userId") !== null ?
                 (
                         <div className="auth-buttons">
                             <Link className="text-dark" to="/user/UserProfilePage">

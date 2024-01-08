@@ -25,7 +25,7 @@ export class EmailLoginPage extends Component {
                     this.setState({ errorMessage: data.error });
                     return;
                 }
-                this.setState({ errorMessage: data.message });
+                this.setState({ errorMessage: data.message, sendTime: new Date().getTime()+ });
                 if (data.message) alert(data.message);
             }).catch(error => {
                 this.setState({ errorMessage: error.message || "Произошла ошибка при входе. Пожалуйста, попробуйте снова." });
