@@ -14,6 +14,7 @@ export class CDocAlt extends Component {
             middleName: '',
             email: '',
             errorMessage: '',
+            successMessage: '',
         };
     }
 
@@ -79,6 +80,11 @@ export class CDocAlt extends Component {
 
         sendRequest('api/User/UpdateChiefDoctor', 'POST', requestData)
             .then((data) => {
+                this.setState({ successMessage: 'Данные главврача успешно изменены.' });
+
+                setTimeout(() => {
+                    this.setState({ successMessage: '' });
+                }, 2000);
                 console.log('Chief Doctor updated successfully:', data);
                 this.loadChiefDoctors();
             })
@@ -90,6 +96,11 @@ export class CDocAlt extends Component {
     render() {
         return (
             <div className="form-container">
+                {this.state.successMessage && (
+                    <div className="success-message-container">
+                        <p className="success-message">{this.state.successMessage}</p>
+                    </div>
+                )}
                 <h2>Изменение данных главврача</h2>
                 <form onSubmit={this.handleFormSubmit}>
                     <div className="form-group">

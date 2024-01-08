@@ -16,6 +16,7 @@ export class PolyAdd extends Component {
             schedule: '',
             type: 'adult',
             duplicateWarning: '',
+            successMessage: '',
         };
     }
 
@@ -46,6 +47,12 @@ export class PolyAdd extends Component {
                             } else {
                                 sendRequest('api/Hospital/AddHospital', 'POST', this.state)
                                     .then((data) => {
+                                        this.setState({ successMessage: 'Поликлиника успешно добавлена.' });
+
+                                        setTimeout(() => {
+                                            this.setState({ successMessage: '' });
+                                        }, 2000);
+
                                         console.log('Hospital added successfully:', data);
                                     })
                                     .catch((error) => {
@@ -72,6 +79,11 @@ export class PolyAdd extends Component {
         return (
             <div className="form-container">
                 <h2>Форма для заполнения данных клиники</h2>
+                {this.state.successMessage && (
+                    <div className="success-message-container">
+                        <p className="success-message">{this.state.successMessage}</p>
+                    </div>
+                )}
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="clinicName">Наименование клиники</label>
@@ -131,66 +143,34 @@ export class PolyAdd extends Component {
                     </div>
                     <div className="form-group">
                         <label htmlFor="schedule">Время работы</label>
-                        <textarea
+                        <input
+                            type="text"
                             id="schedule"
                             name="schedule"
-                            rows="4"
                             value={this.state.schedule}
                             onChange={this.handleChange}
                             required
-                        ></textarea>
+                        />
                     </div>
                     <div className="form-group">
-                        <label>Тип клиники</label>
-                        <div>
-                            <label htmlFor="typeAdult">
-                                <input
-                                    type="radio"
-                                    id="typeAdult"
-                                    name="type"
-                                    value="adult"
-                                    checked={this.state.type === 'adult'}
-                                    onChange={this.handleChange}
-                                    required
-                                />{' '}
-                                Взрослая
-                            </label>
-                        </div>
-                        <div>
-                            <label htmlFor="typeChild">
-                                <input
-                                    type="radio"
-                                    id="typeChild"
-                                    name="type"
-                                    value="child"
-                                    checked={this.state.type === 'child'}
-                                    onChange={this.handleChange}
-                                    required
-                                />{' '}
-                                Детская
-                            </label>
-                        </div>
-                        <div>
-                            <label htmlFor="typeSpecialized">
-                                <input
-                                    type="radio"
-                                    id="typeSpecialized"
-                                    name="type"
-                                    value="specialized"
-                                    checked={this.state.type === 'specialized'}
-                                    onChange={this.handleChange}
-                                    required
-                                />{' '}
-                                Специализированная
-                            </label>
-                        </div>
+                        <label htmlFor="type">Тип клиники</label>
+                        <select
+                            id="type"
+                            name="type"
+                            value={this.state.type}
+                            onChange={this.handleChange}
+                            required
+                        >
+                            <option value="adult">Взрослая</option>
+                            <option value="pediatric">Детская</option>
+                        </select>
                     </div>
-                    <div className="form-group">
-                        <input type="submit" value="Добавить" style={{ width: '100%' }} />
-                        {this.state.duplicateWarning && (
-                            <p style={{ color: 'red' }}>{this.state.duplicateWarning}</p>
-                        )}
-                    </div>
+                    {this.state.duplicateWarning && (
+                        <div className="duplicate-warning">
+                            <p>{this.state.duplicateWarning}</p>
+                        </div>
+                    )}
+                    <button type="submit">Добавить поликлинику</button>
                 </form>
                 <button className="admin-corner-button">&#8606;</button>
             </div>
