@@ -26,6 +26,8 @@ export class EditPatientForm extends Component {
         const { patientId } = this.state;
         sendRequest(`/api/Patient/GetPatientById`, 'GET', null, { patientId })
             .then((data) => {
+                // Преобразование формата даты
+                data.birthDate = new Date(data.birthDate).toISOString().split('T')[0];
                 this.setState({ patient: data });
             })
             .catch((error) => {
