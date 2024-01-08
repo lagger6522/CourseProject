@@ -31,13 +31,17 @@ export class LoginPage extends Component {
 
                 // Проверка роли и перенаправление
                 if (data.role === 'User') {
-                    window.location.href = "/"                  
+                    window.location.href = "/";
+                    sessionStorage.setItem("redirectMessage", "Вы успешно вошли за пользователя!");
                 } else if (data.role === 'Admin') {
-                    window.location.href = "/administrator/AdminPage"     
+                    window.location.href = "/administrator/AdminPage";
+                    sessionStorage.setItem("redirectMessage", "Вы успешно вошли за админа!");
                 } else if (data.role === 'Chief Medical Officer') {
-                    window.location.href = "/chief/ChiefPage"     
+                    window.location.href = "/chief/ChiefPage";
+                    sessionStorage.setItem("redirectMessage", "Вы успешно вошли за главврача!");
                 } else {
-                    window.location.href = "/manager/ManagerPage"
+                    window.location.href = "/doctor/DoctorPage";
+                    sessionStorage.setItem("redirectMessage", "Вы успешно вошли за врача!");
                 }
         }).catch(error => {
             this.setState({ errorMessage: error.message || "Произошла ошибка при входе. Пожалуйста, попробуйте снова." });

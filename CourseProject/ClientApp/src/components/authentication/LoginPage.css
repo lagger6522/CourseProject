@@ -41,3 +41,16 @@ body {
 .btn:hover {
     background-color: #e3ad0b;
 }
+
+.redirect-message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: green;
+    color: white;
+    padding: 10px;
+}
