@@ -84,7 +84,7 @@ export class HospitalList extends Component {
                 </div>
                 <div className="hospital-list">
                     {finalHospitals.map((hospital) => (
-                        <Link key={hospital.hospitalId} to={`/hospital/${hospital.hospitalId}`}>
+                        <Link key={hospital.hospitalId} to={`/spec?hospitalId=${hospital.hospitalId}`}>
                             <div className="hospital-block">
                                 <h3>{hospital.clinicName}</h3>
                                 <p>City: {hospital.city}</p>
