@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import sendRequest from '../SendRequest';
 
 export class HospitalList extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             hospitals: [],
             sortedField: null,
             sortOrder: 'asc',
-            searchTerm: '',
+            searchQuery: '',
             filterType: 'All',
         };
     }
@@ -19,46 +19,50 @@ export class HospitalList extends Component {
     }
 
     loadHospitals = () => {
-        const { sortedField, sortOrder, searchTerm, filterType } = this.state;
-
-        const queryParams = new URLSearchParams();
-        queryParams.append('sortedField', sortedField);
-        queryParams.append('sortOrder', sortOrder);
-        queryParams.append('searchTerm', searchTerm);
-        queryParams.append('filterType', filterType);
-
-        sendRequest(`/api/Hospitals/GetHospitals?${queryParams.toString()}`, 'GET')
+        sendRequest('/api/Hospital/GetHospitals', 'GET')
             .then((data) => {
                 this.setState({ hospitals: data });
             })
             .catch((error) => {
-                console.error('Error fetching hospitals:', error);
+                console.error('Error fetching hospital list:', error);
             });
     };
 
     handleSort = (field) => {
         const { sortedField, sortOrder } = this.state;
-        const newSortOrder = sortedField === field ? (sortOrder === 'asc' ? 'desc' : 'asc') : 'asc';
 
-        this.setState({ sortedField: field, sortOrder: newSortOrder }, () => {
-            this.loadHospitals();
-        });
+        if (sortedField === field) {
+            this.setState({ sortOrder: sortOrder === 'asc' ? 'desc' : 'asc' });
+        } else {
+            this.setState({ sortedField: field, sortOrder: 'asc' });
+        }
     };
 
     handleSearch = (event) => {
-        this.setState({ searchTerm: event.target.value }, () => {
-            this.loadHospitals();
-        });
+        this.setState({ searchQuery: event.target.value });
     };
 
     handleFilter = (event) => {
-        this.setState({ filterType: event.target.value }, () => {
-            this.loadHospitals();
-        });
+        this.setState({ filterType: event.target.value });
     };
 
     render() {
-        const { hospitals, sortedField, sortOrder, searchTerm, filterType } = this.state;
+        const { hospitals, sortedField, sortOrder, searchQuery, filterType } = this.state;
+
+        // Сортировка
+        const sortedHospitals = [...hospitals].sort((a, b) => {
+            const order = sortOrder === 'asc' ? 1 : -1;
+            return a[sortedField] > b[sortedField] ? order : -order;
+        });
+
+        // Поиск
+        const filteredHospitals = sortedHospitals.filter((hospital) => {
+            const searchFields = ['clinicName', 'city', 'street', 'houseNumber', 'registrationNumber', 'clinicType'];
+            return searchFields.some((field) => hospital[field].toLowerCase().includes(searchQuery.toLowerCase()));
+        });
+
+        // Фильтрация
+        const finalHospitals = filterType === 'All' ? filteredHospitals : filteredHospitals.filter((hospital) => hospital.clinicType.toLowerCase() === filterType.toLowerCase());
 
         return (
             <div>
@@ -66,30 +70,10 @@ export class HospitalList extends Component {
                 <div>
                     <label>
                         Search:
-                        <input type="text" value={searchTerm} onChange={this.handleSearch} />
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        Sort by:
-                        <select value={sortedField} onChange={(e) => this.handleSort(e.target.value)}>
-                            <option value="ClinicName">Clinic Name</option>
-                            <option value="City">City</option>
-                            <option value="RegistrationNumber">Registration Number</option>
-                            {/* Добавьте дополнительные опции для других полей */}
-                        </select>
+                        <input type="text" value={searchQuery} onChange={this.handleSearch} />
                     </label>
                     <label>
-                        Order:
-                        <select value={sortOrder} onChange={(e) => this.setState({ sortOrder: e.target.value }, this.loadHospitals)}>
-                            <option value="asc">Ascending</option>
-                            <option value="desc">Descending</option>
-                        </select>
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        Filter by Clinic Type:
+                        Filter by Type:
                         <select value={filterType} onChange={this.handleFilter}>
                             <option value="All">All</option>
                             <option value="Adult">Adult</option>
@@ -98,17 +82,20 @@ export class HospitalList extends Component {
                         </select>
                     </label>
                 </div>
-                <ul>
-                    {hospitals.map((hospital) => (
-                        <li key={hospital.HospitalID}>
-                            <strong>{hospital.ClinicName}</strong>
-                            <p>{hospital.City}, {hospital.Street} {hospital.HouseNumber}</p>
-                            <p>Registration Number: {hospital.RegistrationNumber}</p>
-                            <p>Working Hours: {hospital.WorkingHours}</p>
-                            <p>Clinic Type: {hospital.ClinicType}</p>
-                        </li>
+                <div className="hospital-list">
+                    {finalHospitals.map((hospital) => (
+                        <Link key={hospital.hospitalId} to={`/hospital/${hospital.hospitalId}`}>
+                            <div className="hospital-block">
+                                <h3>{hospital.clinicName}</h3>
+                                <p>City: {hospital.city}</p>
+                                <p>Street: {hospital.street}</p>
+                                <p>House Number: {hospital.houseNumber}</p>
+                                <p>Registration Number: {hospital.registrationNumber}</p>
+                                <p>Clinic Type: {hospital.clinicType}</p>
+                            </div>
+                        </Link>
                     ))}
-                </ul>
+                </div>
             </div>
         );
     }
