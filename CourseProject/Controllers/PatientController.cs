@@ -14,6 +14,77 @@ namespace Store.controllers
 		}
 
 		[HttpGet]
+		public async Task<IActionResult> GetPatientById(int patientId)
+		{
+			try
+			{
+				var patient = await _context.Patients.FindAsync(patientId);
+
+				if (patient == null)
+				{
+					return NotFound();
+				}
+
+				return Ok(patient);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, "Internal Server Error");
+			}
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> UpdatePatient( [FromBody] Patient updatedPatient, int patientId)
+		{
+			try
+			{
+				var existingPatient = await _context.Patients.FindAsync(patientId);
+
+				if (existingPatient == null)
+				{
+					return NotFound();
+				}
+
+				existingPatient.FirstName = updatedPatient.FirstName;
+				existingPatient.LastName = updatedPatient.LastName;
+				existingPatient.MiddleName = updatedPatient.MiddleName;
+				existingPatient.BirthDate = updatedPatient.BirthDate;
+				existingPatient.Gender = updatedPatient.Gender;
+
+				_context.Entry(existingPatient).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+				await _context.SaveChangesAsync();
+
+				return Ok("Patient data updated successfully");
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, "Internal Server Error");
+			}
+		}
+
+		[HttpDelete]
+		public IActionResult DeletePatient(int patientId)
+		{
+			try
+			{
+				 var patient = _context.Patients.Find(patientId);
+				if (patient == null)
+				{
+					return NotFound();
+				}
+				_context.Patients.Remove(patient);
+				_context.SaveChanges();
+
+				return NoContent(); 
+			}
+			catch (Exception ex)
+			{
+				// Обработка ошибок, например, логирование
+				return StatusCode(500, "Internal Server Error");
+			}
+		}
+
+		[HttpGet]
 		public IActionResult GetPatientsByUser(int userId)
 		{
 			try
@@ -25,6 +96,7 @@ namespace Store.controllers
 						p.PatientId,
 						p.FirstName,
 						p.LastName,
+						p.MiddleName,
 						p.BirthDate,
 						p.Gender
 					})

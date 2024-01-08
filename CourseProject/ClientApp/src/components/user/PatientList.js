@@ -8,7 +8,6 @@ const PatientList = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Запрос на сервер для получения списка пациентов пользователя
         sendRequest(`api/Patient/GetPatientsByUser?userId=${userId}`, 'GET')
             .then((data) => {
                 setPatients(data);
@@ -19,6 +18,19 @@ const PatientList = () => {
                 setLoading(false);
             });
     }, [userId]);
+
+    const handleDelete = (patientId) => {
+        sendRequest(`/api/Patient/DeletePatient`, 'DELETE', null, { patientId })
+            .then(() => {
+                console.log(`Пациент с ID ${patientId} успешно удален.`);
+                setPatients((prevPatients) => prevPatients.filter((patient) => patient.patientId !== patientId));
+            })
+            .catch((error) => {
+                console.error(`Ошибка при удалении пациента с ID ${patientId}:`, error);
+            });
+    };
+
+
 
     return (
         <div>
@@ -33,8 +45,13 @@ const PatientList = () => {
                         <li key={patient.patientId}>
                             Имя: {patient.firstName}<br />
                             Фамилия: {patient.lastName}<br />
+                            Отчество: {patient.middleName}<br />
                             Дата рождения: {new Date(patient.birthDate).toLocaleDateString()}<br />
-                            Пол: {patient.gender}
+                            Пол: {patient.gender}<br />
+                            <Link to={`/edit-patient?patientId=${patient.patientId}`}>
+                                <button>Изменить</button>
+                            </Link>                             
+                            <button onClick={() => handleDelete(patient.patientId)}>Удалить</button>
                         </li>
                     ))}
                 </ul>
