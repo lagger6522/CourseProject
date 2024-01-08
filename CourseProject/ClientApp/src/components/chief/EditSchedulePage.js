@@ -14,7 +14,6 @@ export class EditSchedulePage extends Component {
             newDay: '',
             newTime: '',
             errorMessage: '',
-
         };        
     }
 
@@ -36,9 +35,9 @@ export class EditSchedulePage extends Component {
     };
 
     handleSaveSchedule = () => {
-        const { doctorId, schedule } = this.state;
+        const { doctorId, schedule } = this.state;  
 
-        sendRequest(`/api/Schedule/UpdateDoctorSchedule/${doctorId}`, 'POST', { schedule })
+        sendRequest(`/api/Schedule/UpdateDoctorSchedule`, 'POST', schedule, { doctorId })
             .then(() => {
                 console.log('Doctor schedule updated successfully.');
             })
