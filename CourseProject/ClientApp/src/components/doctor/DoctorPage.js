@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import './ChiefPage.css';
+import './DoctorPage.css';
 
 export class ChiefPage extends Component {
     constructor(props) {
@@ -37,9 +37,6 @@ export class ChiefPage extends Component {
                         <p className="success-message">{message}</p>
                     </div>
                 )}
-                <Link to="/chief/DoctorList">
-                    <button>Список врачей</button>
-                </Link>
 
             </div>
         );

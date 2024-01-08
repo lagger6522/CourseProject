@@ -17,6 +17,14 @@ VALUES ('Admin', 'Admin', 'Admin', 'Admin@mail.ru', '123', 'Admin');
 	
 INSERT INTO Users (FirstName, LastName, MiddleName, Email, Password, Role)
 VALUES ('Admin', 'Admin', 'Admin', 'Chief@mail.ru', '123', 'Chief Medical Officer');
+
+	
+INSERT INTO Users (FirstName, LastName, MiddleName, Email, Password, Role)
+VALUES ('Admin', 'Admin', 'Admin', 'Chief@mail.ru', '123', 'Chief Medical Officer');
+	
+	
+INSERT INTO Users (FirstName, LastName, MiddleName, Email, Password, Role) 
+VALUES ('Doc', 'Doc', 'Doc', 'Doctor@mail.ru', '123', 'Doctor');
 	
 	select * from Users
 	select * from Patients
