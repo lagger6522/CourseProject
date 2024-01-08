@@ -261,16 +261,8 @@ namespace Store.controllers
 					})
 					.ToList();
 
-				if (doctors.Any())
-				{
-					Console.WriteLine("Doctors:", doctors);
-					return Ok(doctors);
-				}
-				else
-				{
-					Console.WriteLine("No doctors found.");
-					return NotFound("No doctors found.");
-				}
+				return Ok(doctors);
+
 			}
 			catch (Exception ex)
 			{
