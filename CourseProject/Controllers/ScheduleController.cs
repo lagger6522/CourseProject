@@ -78,32 +78,5 @@ namespace Store.controllers
 				return StatusCode(500, $"Internal server error: {ex.Message}");
 			}
 		}
-
-
-		[HttpPost]
-		public async Task<IActionResult> UpdateDoctorSchedule(int doctorId, List<Schedule> updatedSchedule)
-		{
-			try
-			{
-				var existingSchedule = await _context.Schedules
-					.Where(s => s.DoctorId == doctorId)
-					.ToListAsync();
-
-				// Удаляем старое расписание врача
-				_context.Schedules.RemoveRange(existingSchedule);
-
-				// Добавляем новое расписание
-				updatedSchedule.ForEach(s => s.DoctorId = doctorId);
-				_context.Schedules.AddRange(updatedSchedule);
-
-				await _context.SaveChangesAsync();
-
-				return Ok(new { message = "Doctor schedule updated successfully." });
-			}
-			catch (Exception ex)
-			{
-				return StatusCode(500, $"Internal server error: {ex.Message}");
-			}
-		}
 	}
 }	
