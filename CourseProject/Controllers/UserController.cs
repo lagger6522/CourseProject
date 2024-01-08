@@ -18,13 +18,12 @@ namespace Store.controllers
 	{
 
 		private readonly QueuedbContext _context;
-		private Dictionary<string, (string code, DateTime expireTime)> codes;
+		private static Dictionary<string, (string code, DateTime expireTime)> codes = new Dictionary<string, (string code, DateTime expireTime)>();
 		private static Random random = new Random();
 
 		public UserController(QueuedbContext context)
 		{
 			_context = context;
-			codes = new Dictionary<string, (string code, DateTime expireTime)>();
         }
 
 
@@ -319,7 +318,7 @@ namespace Store.controllers
         [HttpPost]
         public async Task<IActionResult> SendCodeToEmail(string email)
         {
-            codes.Where(n => n.Value.expireTime > DateTime.Now)
+            codes.Where(n => n.Value.expireTime < DateTime.Now)
                 .ToList().ForEach(n => codes.Remove(n.Key));
             var user = _context.Users.FirstOrDefault(u => u.Email == email);
             if (user == null) return Json(new { error = $"Пользователь с таким email не существует" });
@@ -344,7 +343,7 @@ namespace Store.controllers
         [HttpPost]
         public async Task<IActionResult> LoginByEmail(string email, string code)
         {
-            codes.Where(n => n.Value.expireTime > DateTime.Now)
+            codes.Where(n => n.Value.expireTime < DateTime.Now)
                 .ToList().ForEach(n => codes.Remove(n.Key));
             var user = _context.Users.FirstOrDefault(u => u.Email == email);
             if (user == null) return Json(new { error = $"Пользователь с таким email не существует" });

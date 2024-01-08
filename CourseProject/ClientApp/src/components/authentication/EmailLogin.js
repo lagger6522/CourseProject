@@ -10,9 +10,15 @@ export class EmailLoginPage extends Component {
             code: '',
             errorMessage: null,
             sendTime: null,
+            currentDate: new Date()
         };
     }
-
+    componentDidMount() {
+        this.interval = setInterval(() => this.setState({ currentDate: new Date() }), 1000);
+    }
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
     handleInputChange = (e) => {
         this.setState({ [e.target.name]: e.target.value });
     }
@@ -25,7 +31,7 @@ export class EmailLoginPage extends Component {
                     this.setState({ errorMessage: data.error });
                     return;
                 }
-                this.setState({ errorMessage: data.message, sendTime: new Date().getTime()+ });
+                this.setState({ errorMessage: data.message, sendTime: new Date(new Date().getTime() + 10000) });
                 if (data.message) alert(data.message);
             }).catch(error => {
                 this.setState({ errorMessage: error.message || "Произошла ошибка при входе. Пожалуйста, попробуйте снова." });
@@ -67,7 +73,7 @@ export class EmailLoginPage extends Component {
 
         return (
             <div>
-                <form className="form" onSubmit={this.handleLogin}>
+                <form className="form">
                     <input
                         className="input"
                         type="email"
@@ -77,10 +83,11 @@ export class EmailLoginPage extends Component {
                         onChange={this.handleInputChange}
                         required
                     />
-                    <button disabled={this.state.sendTime && new Date() < this.state.sendTime} className="btn" onClick={this.handleSendCode}>Отправить код на email</button>
+                    <button disabled={this.state.sendTime && this.state.currentDate < this.state.sendTime} className="btn" onClick={this.handleSendCode}>Отправить код на email</button>
+                    {this.state.sendTime && this.state.currentDate < this.state.sendTime? `${Math.round((this.state.sendTime - this.state.currentDate)/1000)}`:null}
                 </form>
                 {this.state.sendTime &&
-                    <form>
+                    <form className="form" onSubmit={this.handleLogin}>
                         <input
                             className="input"
                             type="text"
