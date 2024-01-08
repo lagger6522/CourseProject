@@ -22,13 +22,19 @@ VALUES ('Admin', 'Admin', 'Admin', 'Chief@mail.ru', '123', 'Chief Medical Office
 	select * from Patients
 	select * from Hospitals
 	
+CREATE TABLE Talon(
+	TalonID INT PRIMARY KEY IDENTITY(1,1),
+	PatientID INT NOT NULL FOREIGN KEY REFERENCES Patients(PatientID),
+	OrderTime TIME NOT NULL,
+	ScheduleDayID INT NOT NULL FOREIGN KEY REFERENCES Schedules(ScheduleID),
+);
 
 CREATE TABLE Users (
     UserID INT PRIMARY KEY IDENTITY(1,1),
     FirstName NVARCHAR(50) NOT NULL,
     LastName NVARCHAR(50) NOT NULL,
     MiddleName NVARCHAR(50) NOT NULL,
-    Password NVARCHAR(256) NOT NULL,
+    Password NVARCHAR(256) UNIQUE NOT NULL,
     Email NVARCHAR(100) NOT NULL,
 	Role NVARCHAR(50) NOT NULL DEFAULT 'User' CHECK(Role IN ('User', 'Doctor', 'Chief Medical Officer', 'Admin')),
 	Specialization NVARCHAR(100) NULL,

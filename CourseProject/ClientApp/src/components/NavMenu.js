@@ -60,11 +60,22 @@ export class NavMenu extends Component {
             }).catch(e => console.error(e))
     }
 
-  render() {
+    render() {
+        let role = sessionStorage.getItem("role") || "User";
+        let home = "/";
+        if (role === 'User') {
+            home = "/"
+        } else if (role === 'Admin') {
+            home = "/administrator/AdminPage"
+        } else if (role === 'Chief Medical Officer') {
+            home = "/chief/ChiefPage"
+        } else {
+            home = "/manager/ManagerPage"
+        }
     return (
       <header>
         <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" container light>
-          <NavbarBrand tag={Link} to="/">CourseProject</NavbarBrand>
+          <NavbarBrand tag={Link} to={home} >CourseProject</NavbarBrand>
           <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
           <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
             <ul className="navbar-nav flex-grow">

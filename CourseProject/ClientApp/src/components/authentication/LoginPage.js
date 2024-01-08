@@ -70,6 +70,7 @@ export class LoginPage extends Component {
                     />
                     <button className="btn" type="submit">Авторизация</button>
                     {errorMessage && <p className="error-message">{errorMessage}</p>}
+                    <sub><a href="/authentication/EmailLoginPage"><i>Войти спомощью google почты</i></a></sub>
                 </form>
             </div>
         );

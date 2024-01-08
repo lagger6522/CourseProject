@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using CourseProject.Model;
 using Store.Domain.Model;
 using System.Numerics;
+using CourseProject.Utils;
 
 namespace Store.controllers
 {
@@ -17,11 +18,14 @@ namespace Store.controllers
 	{
 
 		private readonly QueuedbContext _context;
+		private Dictionary<string, (string code, DateTime expireTime)> codes;
+		private static Random random = new Random();
 
 		public UserController(QueuedbContext context)
 		{
 			_context = context;
-		}
+			codes = new Dictionary<string, (string code, DateTime expireTime)>();
+        }
 
 
 		[Authorize]
@@ -272,8 +276,62 @@ namespace Store.controllers
 			}
 		}
 
+        [HttpPost]
+        public async Task<IActionResult> SendCodeToEmail(string email)
+        {
+			codes.Where(n => n.Value.expireTime > DateTime.Now)
+				.ToList().ForEach(n => codes.Remove(n.Key));
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+			if (user == null) return Json(new { error = $"Пользователь с таким email не существует" });
+            string code = ((int)(Math.Floor(246 + random.NextDouble() * DateTime.Now.Ticks) % 1000000)).ToString();
+			if (codes.ContainsKey(email))
+			{
+				codes[email] = (code, DateTime.Now.AddMinutes(5));
+            }
+			else
+			{
+                codes.Add(email, (code, DateTime.Now.AddMinutes(5)));
+            }
+			if(await MailWorker.SendMessage(email, "Код подтверждения", code))
+			{
+				return Json(new {message=$"На email {email} был отправлен код подтверждения"});
+			}
+			else
+			{
+                return Json(new { error = $"Не удалось отправить код на email {email}" });
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> LoginByEmail(string email, string code)
+        {
+            codes.Where(n => n.Value.expireTime > DateTime.Now)
+                .ToList().ForEach(n => codes.Remove(n.Key));
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null) return Json(new { error = $"Пользователь с таким email не существует" });
+            if (codes.ContainsKey(email))
+            {
+				if (codes[email].code == code)
+				{
+					codes.Remove(email);
+                    var token = GenerateToken(user);
 
-		private string HashPassword(string password)
+                    ClaimsIdentity identity = new ClaimsIdentity(new Claim[]
+                    {
+						new Claim("ClaimTypes.UserId", user.UserId.ToString()),
+						new Claim(ClaimTypes.Role, user.Role),
+                    },
+                    CookieAuthenticationDefaults.AuthenticationScheme);
+                    ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+                    await HttpContext.SignInAsync(
+                      CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                    return Ok(new { token, role = user.Role, userId = user.UserId });
+                }
+                return Json(new { error = $"Неверный код" });
+            }
+            return Json(new { error = $"Код устарел попробуйте снова" });
+        }
+
+        private string HashPassword(string password)
 		{
 			return password;
 		}
@@ -282,5 +340,6 @@ namespace Store.controllers
 		{
 			return await _context.Users.ToListAsync();
 		}
+
 	}
 }	

@@ -1,6 +1,7 @@
 import { Home } from "./components/Home";
 import { RegisterPage } from "./components/authentication/RegisterPage";
 import { LoginPage } from "./components/authentication/LoginPage";
+import { EmailLoginPage } from "./components/authentication/EmailLogin";
 import UserProfilePage from "./components/user/UserProfilePage";
 import { AdminPage } from "./components/administrator/AdminPage";
 import { AdminPolyPage } from "./components/administrator/AdminPolyPage";
@@ -71,6 +72,10 @@ const AppRoutes = [
 {
     path: '/authentication/LoginPage',
     element: <LoginPage />
+},
+{
+    path: '/authentication/EmailLoginPage',
+    element: <EmailLoginPage />
 },
 {
     path: '/user/UserProfilePage',
