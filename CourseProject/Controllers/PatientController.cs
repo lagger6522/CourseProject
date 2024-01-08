@@ -34,7 +34,7 @@ namespace Store.controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> UpdatePatient(int patientId, Patient updatedPatient)
+		public async Task<IActionResult> UpdatePatient( [FromBody] Patient updatedPatient, int patientId)
 		{
 			try
 			{
