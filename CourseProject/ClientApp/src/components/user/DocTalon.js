@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { useParams } from 'react-router-dom';
 import sendRequest from '../SendRequest';
 
 export class DocTalon extends Component {
@@ -13,11 +12,18 @@ export class DocTalon extends Component {
 
     componentDidMount() {
         this.loadDoctor();
-        const userId = sessionStorage.getItem('userId');//пользователь заказывающий талон
+        const userId = sessionStorage.getItem('userId'); // пользователь заказывающий талон
     }
 
     loadDoctor = () => {
-        const { userId, hospitalId } = this.props.match.params;
+        const { params } = this.props.match || {};
+        const { userId, hospitalId } = params || {};
+
+        if (!userId) {
+            // ƒобавьте обработку, например, перенаправление или вывод сообщени€ об ошибке
+            console.error('User ID is missing.');
+            return;
+        }
 
         sendRequest(`/api/User/GetDoctorById`, 'GET', null, { userId })
             .then((data) => {
@@ -29,7 +35,8 @@ export class DocTalon extends Component {
     };
 
     handleTakeTalon = () => {
-
+        // ¬аш код дл€ вз€ти€ талона
+        console.log('Talon taken for doctor:', this.state.doctor);
     };
 
     render() {
