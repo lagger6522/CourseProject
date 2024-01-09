@@ -336,6 +336,30 @@ namespace Store.controllers
 			}
 		}
 
+		[HttpGet]
+		public ActionResult<IEnumerable<DoctorDto>> GetDoctorsByHospital(int hospitalId)
+		{
+			try
+			{
+				var doctors = _context.Users
+					.Where(d => d.HospitalId == hospitalId && d.Role == "Doctor")
+					.Select(d => new DoctorDto
+					{
+						UserId = d.UserId,
+						FirstName = d.FirstName,
+						LastName = d.LastName,
+						Specialization = d.Specialization,
+					})
+					.ToList();
+
+				return Ok(doctors);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, "Internal server error");
+			}
+		}
+
 		private string HashPassword(string password)
 		{
 			return password; 
