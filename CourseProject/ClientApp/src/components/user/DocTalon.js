@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { useParams } from 'react-router-dom';
 import sendRequest from '../SendRequest';
 
-export class DocTalon extends Component {
+class DocTalon extends Component {
     constructor(props) {
         super(props);
         this.state = {
             doctor: null,
+            hospitalId: null,
         };
     }
 
@@ -15,11 +16,11 @@ export class DocTalon extends Component {
     }
 
     loadDoctor = () => {
-        const { userId } = this.props.match.params;
+        const { userId, hospitalId } = this.props.match.params;
 
         sendRequest(`/api/User/GetDoctorById`, 'GET', null, { userId })
             .then((data) => {
-                this.setState({ doctor: data });
+                this.setState({ doctor: data, hospitalId });
             })
             .catch((error) => {
                 console.error('Error fetching doctor data:', error);
@@ -27,8 +28,7 @@ export class DocTalon extends Component {
     };
 
     handleTakeTalon = () => {
-        // Ваш код для взятия талона
-        console.log('Talon taken for doctor:', this.state.doctor);
+
     };
 
     render() {
