@@ -9,6 +9,10 @@ export class SpecList extends Component {
         this.state = {
             doctors: [],
             hospitalId: queryParameters.get("hospitalId"),
+            searchQuery: '',
+            sortedField: null,
+            sortOrder: 'asc',
+            filterSpecialization: 'All',
         };
     }
 
@@ -27,15 +31,65 @@ export class SpecList extends Component {
             });
     };
 
+    handleSort = (field) => {
+        const { sortedField, sortOrder } = this.state;
+
+        if (sortedField === field) {
+            this.setState({ sortOrder: sortOrder === 'asc' ? 'desc' : 'asc' });
+        } else {
+            this.setState({ sortedField: field, sortOrder: 'asc' });
+        }
+    };
+
+    handleSearch = (event) => {
+        this.setState({ searchQuery: event.target.value });
+    };
+
+    handleFilter = (event) => {
+        this.setState({ filterSpecialization: event.target.value });
+    };
+
     render() {
-        const { doctors, hospitalId } = this.state;
+        const { doctors, hospitalId, searchQuery, sortedField, sortOrder, filterSpecialization } = this.state;
+
+        // Поиск
+        const filteredDoctors = doctors.filter((doctor) =>
+            doctor.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            doctor.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            doctor.specialization.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+        // Сортировка
+        const sortedDoctors = [...filteredDoctors].sort((a, b) => {
+            const order = sortOrder === 'asc' ? 1 : -1;
+            return a[sortedField] > b[sortedField] ? order : -order;
+        });
+
+        // Фильтрация по специализации
+        const finalDoctors = filterSpecialization === 'All'
+            ? sortedDoctors
+            : sortedDoctors.filter((doctor) => doctor.specialization.toLowerCase() === filterSpecialization.toLowerCase());
 
         return (
             <div>
-                <h2>Doctor List</h2>
-                {hospitalId && <p>Doctors for Hospital ID: {hospitalId}</p>}
+                <h2>Список врачей</h2>
+                <div>
+                    <label>
+                        Поиск:
+                        <input type="text" value={searchQuery} onChange={this.handleSearch} />
+                    </label>
+                    <label>
+                        Фильтрация:
+                        <select value={filterSpecialization} onChange={this.handleFilter}>
+                            <option value="All">All</option>
+                            <option value="Дерматолог">Дерматолог</option>
+                            <option value="Терапевт">Терапевт</option>
+                            {/* Добавьте ваши варианты специализации в элементы <option> */}
+                        </select>
+                    </label>
+                </div>
                 <ul>
-                    {doctors && doctors.map((doctor) => (
+                    {finalDoctors.map((doctor) => (
                         <li key={doctor.userId}>
                             <Link to={`/doctor-details?userId=${doctor.userId}`}>
                                 <div>

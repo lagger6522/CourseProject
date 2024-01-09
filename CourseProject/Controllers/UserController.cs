@@ -360,6 +360,35 @@ namespace Store.controllers
 			}
 		}
 
+		[HttpGet]
+		public ActionResult<DoctorDto> GetDoctorById(int userId)
+		{
+			try
+			{
+				var doctor = _context.Users
+					.Where(u => u.UserId == userId && u.Role == "Doctor")
+					.Select(u => new DoctorDto
+					{
+						UserId = u.UserId,
+						FirstName = u.FirstName,
+						LastName = u.LastName,
+						Specialization = u.Specialization,
+					})
+					.SingleOrDefault();
+
+				if (doctor == null)
+				{
+					return NotFound();
+				}
+
+				return Ok(doctor);
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, "Internal server error");
+			}
+		}
+
 		private string HashPassword(string password)
 		{
 			return password; 
