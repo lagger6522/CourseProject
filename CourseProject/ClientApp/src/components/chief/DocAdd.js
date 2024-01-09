@@ -38,7 +38,18 @@ export class DocAdd extends Component {
             return;
         }
 
-        // Добавьте проверку на длину пароля и наличие букв и цифр
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            this.setState({ errorMessage: 'Введите корректный адрес электронной почты' });
+            return;
+        }
+
+        if (password.length < 8 || !/\d/.test(password) || !/[a-zA-Z]/.test(password)) {
+            this.setState({
+                errorMessage: 'Пароль должен содержать минимум 8 символов, включая буквы и цифры',
+            });
+            return;
+        }
 
         const selectedHospitalId = sessionStorage.getItem('hospitalId');
 
