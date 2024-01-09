@@ -40,10 +40,10 @@ export class Home extends Component {
                 )}
 
                 <div>
-                    <h2>Welcome to the Appointment System</h2>
-                    <p>Manage your appointments easily with our system.</p>
+                    <h2>Добро пожаловать в систему записи на прием</h2>
+                    <p>Легко управляйте своими записями с помощью нашей системы.</p>
                     <Link to="/appointment">
-                        <button>Order Appointment</button>
+                        <button>Заказ талона</button>
                     </Link>
                 </div>
             </div>
