@@ -77,7 +77,7 @@ namespace Store.controllers
 			ClaimsPrincipal principal = new ClaimsPrincipal(identity);
 			await HttpContext.SignInAsync(
 			  CookieAuthenticationDefaults.AuthenticationScheme, principal);
-			return Ok(new { token, role = user.Role, userId = user.UserId });
+			return Ok(new { token, role = user.Role, userId = user.UserId, hospitalId = user.HospitalId });
 		}
 
 		private string GenerateToken(User user)
@@ -216,6 +216,14 @@ namespace Store.controllers
 				return BadRequest(ModelState);
 			}
 
+			var chiefDoctor = await _context.Users.SingleOrDefaultAsync(u => u.Role == "Chief Medical Officer" && u.HospitalId == model.HospitalId);
+
+			if (chiefDoctor == null)
+			{
+				ModelState.AddModelError("HospitalID", "Chief Medical Officer for the specified hospital not found.");
+				return BadRequest(ModelState);
+			}
+
 			var doctor = new User
 			{
 				Email = model.Email,
@@ -224,7 +232,8 @@ namespace Store.controllers
 				LastName = model.LastName,
 				MiddleName = model.MiddleName,
 				Role = "Doctor",
-				Specialization = model.Specialization
+				Specialization = model.Specialization,
+				HospitalId = chiefDoctor.HospitalId
 			};
 
 			_context.Users.Add(doctor);

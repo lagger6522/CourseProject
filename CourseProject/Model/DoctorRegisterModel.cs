@@ -23,5 +23,8 @@ public class DoctorRegisterModel
 
 	[Required(ErrorMessage = "Specialization is required.")]
 	public string Specialization { get; set; }
+
+	[Required(ErrorMessage = "HospitalID is required.")]
+	public int HospitalId { get; set; } 
 }
 

@@ -17,6 +17,11 @@ export class DocAdd extends Component {
             errorMessage: null,
         };
     }
+    componentDidMount() {
+        const selectedHospitalId = sessionStorage.getItem('hospitalId');
+        console.log('Selected Hospital ID:', selectedHospitalId);
+        this.setState({ selectedHospitalId });
+    }
 
     handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -33,23 +38,9 @@ export class DocAdd extends Component {
             return;
         }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            this.setState({ errorMessage: 'Enter a valid email address' });
-            return;
-        }
+        // Добавьте проверку на длину пароля и наличие букв и цифр
 
-        if (password.length < 8 || !/\d/.test(password) || !/[a-zA-Z]/.test(password)) {
-            this.setState({
-                errorMessage: 'Password must be at least 8 characters and include letters and numbers',
-            });
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            this.setState({ errorMessage: 'Passwords do not match' });
-            return;
-        }
+        const selectedHospitalId = sessionStorage.getItem('hospitalId');
 
         sendRequest('/api/User/AddDoctor', 'POST', {
             email,
@@ -59,6 +50,7 @@ export class DocAdd extends Component {
             lastName,
             middleName,
             specialization,
+            hospitalId: selectedHospitalId,
         })
             .then(response => {
                 if (response.message) {
@@ -66,13 +58,15 @@ export class DocAdd extends Component {
                 }
             })
             .catch(error => {
-                this.setState({ errorMessage: 'Пользователь с такой почтой уже зарегистрирован' });
-
+                console.error('Error adding doctor:', error);
+                this.setState({ errorMessage: 'Something went wrong while adding the doctor.' });
             });
+
     };
 
     render() {
         const { email, password, confirmPassword, firstName, lastName, middleName, specialization, errorMessage } = this.state;
+        
 
         return (
             <div>
@@ -151,5 +145,4 @@ export class DocAdd extends Component {
         );
     }
 }
-
 export default DocAdd;

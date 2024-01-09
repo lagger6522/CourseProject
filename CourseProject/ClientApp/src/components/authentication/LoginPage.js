@@ -41,7 +41,8 @@ export class LoginPage extends Component {
 
         sendRequest("/api/User/Login", "POST", {email, password }, null)
             .then(data => {
-                sessionStorage.setItem("userId", data.userId);
+                sessionStorage.setItem("hospitalId", data.hospitalId);
+                sessionStorage.setItem("userId", data.userId); 
                 sessionStorage.setItem("email", data.email);
                 sessionStorage.setItem("role", data.role);
                 sessionStorage.setItem("isAuthenticated", true);
