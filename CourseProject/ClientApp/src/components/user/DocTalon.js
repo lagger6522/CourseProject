@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { useParams } from 'react-router-dom';
 import sendRequest from '../SendRequest';
 
-class DocTalon extends Component {
+export class DocTalon extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -13,6 +13,7 @@ class DocTalon extends Component {
 
     componentDidMount() {
         this.loadDoctor();
+        const userId = sessionStorage.getItem('userId');//пользователь заказывающий талон
     }
 
     loadDoctor = () => {
