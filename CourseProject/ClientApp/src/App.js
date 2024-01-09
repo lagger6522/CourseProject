@@ -7,6 +7,7 @@ import PatientList from './components/user/PatientList';
 import EditPatientForm from './components/user/EditPatientForm';
 import HospitalsListPage from './components/user/HospitalsListPage';
 import SpecList from './components/user/SpecList';
+import DocTalon from './components/user/DocTalon';
 import EditSchedulePage from './components/chief/EditSchedulePage';
 import './custom.css';
 
@@ -27,6 +28,7 @@ export default class App extends Component {
           <Route path="/edit-patient" element={<EditPatientForm />} />     
           <Route path="/appointment" element={<HospitalsListPage />} />     
           <Route path="/spec" element={<SpecList />} />     
+          <Route path="/doctor-details" element={<DocTalon />} />     
                 
         </Routes>
       </Layout>

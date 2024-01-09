@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import sendRequest from '../SendRequest';
 
 export class SpecList extends Component {
     constructor(props) {
         super(props);
         const queryParameters = new URLSearchParams(window.location.search);
-        const hospitalId = queryParameters.get("hospitalId");
         this.state = {
             doctors: [],
-            hospitalId,
+            hospitalId: queryParameters.get("hospitalId"),
         };
     }
 
@@ -16,11 +16,11 @@ export class SpecList extends Component {
         this.loadDoctors();
     }
 
-    loadDoctors = (hospitalId) => {
+    loadDoctors = () => {
+        const { hospitalId } = this.state;
         sendRequest(`/api/User/GetDoctorsByHospital`, 'GET', null, { hospitalId })
             .then((data) => {
                 this.setState({ doctors: data });
-                console.log(data);
             })
             .catch((error) => {
                 console.error('Error fetching doctor list:', error);
@@ -35,10 +35,14 @@ export class SpecList extends Component {
                 <h2>Doctor List</h2>
                 {hospitalId && <p>Doctors for Hospital ID: {hospitalId}</p>}
                 <ul>
-                    {doctors.map((doctor) => (
+                    {doctors && doctors.map((doctor) => (
                         <li key={doctor.userId}>
-                            <p>Name: {doctor.firstName} {doctor.lastName}</p>
-                            <p>Specialization: {doctor.specialization}</p>
+                            <Link to={`/doctor-details?userId=${doctor.userId}`}>
+                                <div>
+                                    <p>Name: {doctor.firstName} {doctor.lastName}</p>
+                                    <p>Specialization: {doctor.specialization}</p>
+                                </div>
+                            </Link>
                         </li>
                     ))}
                 </ul>
