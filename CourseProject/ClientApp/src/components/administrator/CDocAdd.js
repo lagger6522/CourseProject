@@ -90,7 +90,7 @@ export class CDocAdd extends Component {
 
     render() {
         const { email, password, confirmPassword, firstName, lastName, middleName, errorMessage, successMessage, selectedHospital, hospitals } = this.state;
-
+        console.log(selectedHospital);
         return (
             <div>
                 {successMessage && (
@@ -156,7 +156,7 @@ export class CDocAdd extends Component {
                     <select
                         className="input"
                         name="selectedHospital"
-                        value={selectedHospital}
+                        value={selectedHospital || ''}
                         onChange={this.handleInputChange}
                         required
                     >
@@ -169,6 +169,7 @@ export class CDocAdd extends Component {
                             </option>
                         ))}
                     </select>
+
                     <button className="btn" type="submit">
                         Добавить главврача
                     </button>
