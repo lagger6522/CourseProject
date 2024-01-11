@@ -47,7 +47,7 @@ export class PolyAlt extends Component {
     handleClinicChange = (e) => {
         const selectedClinic = e.target.value;
         const selectedHospital = this.state.clinics.find((hospital) => hospital.clinicName === selectedClinic);
-
+        console.log(selectedHospital);
         this.setState({
             selectedClinic,
             addressCity: selectedHospital.city,
@@ -240,9 +240,9 @@ export class PolyAlt extends Component {
                                     type="radio"
                                     id="typeChild"
                                     name="type"
-                                    value="child"
-                                    checked={this.state.type === 'child'}
-                                    onChange={() => this.setState({ type: 'child' })}
+                                    value="pediatric"
+                                    checked={this.state.type === 'pediatric'}
+                                    onChange={() => this.setState({ type: 'pediatric' })}
                                     required
                                 /> Детская
                             </label>

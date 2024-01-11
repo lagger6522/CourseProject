@@ -37,13 +37,19 @@ export class PolyList extends Component {
     }
 
     render() {
+        let type = { "adult": "Взрослая", "pediatric": "Детская", "Specialized": "Специализированная"}
         return (
             <div>
                 <h2>Список больниц</h2>
                 <ul>
                     {this.state.hospitals.map((hospital) => (
                         <li key={hospital.hospitalId}>
-                            <span>{JSON.stringify(hospital)}</span>
+                            <strong>
+                                {hospital.hospitalId}){type[hospital.clinicType]}
+                                {hospital.clinicName.toLowerCase().indexOf("поликлиника") === -1 ? " поликлиника" : " "} {hospital.clinicName} -{" "}
+                                {hospital.city} {hospital.street} д.{hospital.houseNumber}
+                            </strong><br />
+                            <i>Регистрация: {hospital.registrationNumber}. Время работы {hospital.workingHours}</i><br />
                             <button onClick={() => this.handleDeleteHospital(hospital.hospitalId)}>Удалить</button>
                         </li>
                     ))}
