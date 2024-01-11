@@ -26,8 +26,6 @@ namespace Store.controllers
 			_context = context;
         }
 
-
-		[Authorize]
 		[HttpGet]
 		public IActionResult Check()
 		{
@@ -41,8 +39,8 @@ namespace Store.controllers
 				var user = _context.Users.FirstOrDefault(u => u.UserId == UserId);
 				if (user == null)
 					return Problem("Пользователя не существует");
-				return Ok(new { role = user.Role, email = user.Email, userId = user.UserId });
-			}
+                return Json(new { role = user.Role, email = user.Email, user.FirstName, user.LastName, user.MiddleName, user.Specialization, userId = user.UserId, hospitalId = user.HospitalId });
+            }
 			return Problem("Пользователь не авторизован.");
 		}
 
@@ -52,7 +50,7 @@ namespace Store.controllers
 		{
 			await HttpContext.SignOutAsync();
 			
-			return Ok();
+			return Json(new { });
 		}
 
 		[HttpPost]
@@ -66,7 +64,7 @@ namespace Store.controllers
 				return Unauthorized(new { message = "Неправильные email или пароль." });
 			}
 
-			var token = GenerateToken(user);
+			//var token = GenerateToken(user);
 			
 			ClaimsIdentity identity = new ClaimsIdentity(new Claim[]
 			{
@@ -77,7 +75,7 @@ namespace Store.controllers
 			ClaimsPrincipal principal = new ClaimsPrincipal(identity);
 			await HttpContext.SignInAsync(
 			  CookieAuthenticationDefaults.AuthenticationScheme, principal);
-			return Ok(new { token, role = user.Role, userId = user.UserId, hospitalId = user.HospitalId });
+			return Json(new { role = user.Role, email=user.Email, user.FirstName, user.LastName, user.MiddleName, user.Specialization, userId = user.UserId, hospitalId = user.HospitalId });
 		}
 
 		private string GenerateToken(User user)
@@ -435,7 +433,7 @@ namespace Store.controllers
                 if (codes[email].code == code)
                 {
                     codes.Remove(email);
-                    var token = GenerateToken(user);
+                    //var token = GenerateToken(user);
 
                     ClaimsIdentity identity = new ClaimsIdentity(new Claim[]
                     {
@@ -446,7 +444,7 @@ namespace Store.controllers
                     ClaimsPrincipal principal = new ClaimsPrincipal(identity);
                     await HttpContext.SignInAsync(
                       CookieAuthenticationDefaults.AuthenticationScheme, principal);
-                    return Ok(new { token, role = user.Role, userId = user.UserId });
+                    return Json(new { role = user.Role, email = user.Email, user.FirstName, user.LastName, user.MiddleName, user.Specialization, userId = user.UserId, hospitalId = user.HospitalId });
                 }
                 return Json(new { error = $"Неверный код" });
             }

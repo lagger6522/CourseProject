@@ -41,12 +41,15 @@ export class LoginPage extends Component {
 
         sendRequest("/api/User/Login", "POST", {email, password }, null)
             .then(data => {
+                if (!data || data.message) {
+                    throw data ? data.message : {message:null};
+                }
+                sessionStorage.setItem("user",JSON.stringify(data));
                 sessionStorage.setItem("hospitalId", data.hospitalId);
                 sessionStorage.setItem("userId", data.userId); 
                 sessionStorage.setItem("email", data.email);
                 sessionStorage.setItem("role", data.role);
                 sessionStorage.setItem("isAuthenticated", true);
-
                 // Проверка роли и перенаправление
                 if (data.role === 'User') {
                     window.location.href = "/";
@@ -61,7 +64,8 @@ export class LoginPage extends Component {
                     window.location.href = "/doctor/DoctorPage";
                     sessionStorage.setItem("redirectMessage", "Вы успешно вошли за врача!");
                 }
-        }).catch(error => {
+            }).catch(error => {
+                console.log(error);
             this.setState({ errorMessage: error.message || "Произошла ошибка при входе. Пожалуйста, попробуйте снова." });
         });
     }

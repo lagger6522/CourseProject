@@ -68,6 +68,7 @@ function sendRequest(endPoint, method, bodyObj = null, ...params){
             return result;
         }).catch(function (error) {
             console.log(error);
+            throw error;
         });
 }
 

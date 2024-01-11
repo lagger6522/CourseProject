@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 var config = new ConfigurationBuilder()
 			.SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
 			.AddJsonFile("appsettings.json").Build();
+
 builder.Services.AddAuthorization();
 builder.Services.AddDbContext<QueuedbContext>(options =>
 				options.UseSqlServer(config.GetConnectionString("ConnectionMSSQLServer")));
@@ -19,7 +20,14 @@ builder.Services.AddAuthentication(options =>
 })
 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
 {
-	options.ExpireTimeSpan = TimeSpan.FromDays(5);
+	options.LoginPath = string.Empty;
+    options.AccessDeniedPath = string.Empty;
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        return Task.CompletedTask;
+    };
+    options.ExpireTimeSpan = TimeSpan.FromDays(5);
 });
 
 var app = builder.Build();
@@ -44,7 +52,7 @@ app.MapControllerRoute(
 
 app.UseCookiePolicy(new CookiePolicyOptions
 {
-	MinimumSameSitePolicy = SameSiteMode.Lax,
+	MinimumSameSitePolicy = SameSiteMode.None,
 	HttpOnly = HttpOnlyPolicy.Always,
 	Secure = CookieSecurePolicy.Always
 });

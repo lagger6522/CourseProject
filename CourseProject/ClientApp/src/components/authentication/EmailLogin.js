@@ -48,6 +48,7 @@ export class EmailLoginPage extends Component {
                     this.setState({ errorMessage: data.error });
                     return;
                 }
+                sessionStorage.setItem("user", JSON.stringify(data));
                 sessionStorage.setItem("userId", data.userId);
                 sessionStorage.setItem("email", data.email);
                 sessionStorage.setItem("role", data.role);

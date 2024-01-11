@@ -27,13 +27,13 @@ export class NavMenu extends Component {
     }
 
     componentDidMount() {
-
         if (sessionStorage.getItem("userId") === null) {
             sendRequest("/api/User/Check", "Get", null)
                 .then(n => {
                     this.setState({
                         user: n,
                     })
+                    sessionStorage.setItem("user", JSON.stringify(n));
                     sessionStorage.setItem("userId", n.userId);
                     sessionStorage.setItem("email", n.email);
                     sessionStorage.setItem("role", n.role);
@@ -46,7 +46,7 @@ export class NavMenu extends Component {
                     if (n.role === 'Manager') {
                         window.location.href = "/manager/ManagerPage"
                     }
-                }).catch(e => console.error(e))
+                }).catch(e => { console.error(e); sessionStorage.clear(); })
         }
     }
 
@@ -56,10 +56,7 @@ export class NavMenu extends Component {
                 this.setState({
                     user: null,
                 })
-                sessionStorage.removeItem("userId");
-                sessionStorage.removeItem("email");
-                sessionStorage.removeItem("role");
-                sessionStorage.removeItem("isAuthenticated");
+                sessionStorage.clear();
                 this.state.message = "Вы успешно вышли из аккаунта!"
             }).catch(e => console.error(e))
     }
