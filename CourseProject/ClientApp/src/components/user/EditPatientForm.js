@@ -55,6 +55,7 @@ export class EditPatientForm extends Component {
         sendRequest(`/api/Patient/UpdatePatient`, 'POST', patient, { patientId })
             .then(() => {
                 console.log('Patient data updated successfully.');
+                window.location.href = "/patients-list";
             })
             .catch((error) => {
                 console.error('Error updating patient data:', error);

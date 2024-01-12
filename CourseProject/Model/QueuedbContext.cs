@@ -21,6 +21,8 @@ public partial class QueuedbContext : DbContext
 
     public virtual DbSet<Schedule> Schedules { get; set; }
 
+    public virtual DbSet<Talon> Talons { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -31,7 +33,7 @@ public partial class QueuedbContext : DbContext
     {
         modelBuilder.Entity<Hospital>(entity =>
         {
-            entity.HasKey(e => e.HospitalId).HasName("PK__Hospital__38C2E58F3C37B671");
+            entity.HasKey(e => e.HospitalId).HasName("PK__Hospital__38C2E58FB7C82324");
 
             entity.Property(e => e.HospitalId).HasColumnName("HospitalID");
             entity.Property(e => e.City).HasMaxLength(50);
@@ -45,7 +47,7 @@ public partial class QueuedbContext : DbContext
 
         modelBuilder.Entity<Patient>(entity =>
         {
-            entity.HasKey(e => e.PatientId).HasName("PK__Patients__970EC346E284EEF5");
+            entity.HasKey(e => e.PatientId).HasName("PK__Patients__970EC346ABD2F3F0");
 
             entity.Property(e => e.PatientId).HasColumnName("PatientID");
             entity.Property(e => e.BirthDate).HasColumnType("date");
@@ -58,12 +60,12 @@ public partial class QueuedbContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Patients)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Patients__UserID__2BFE89A6");
+                .HasConstraintName("FK__Patients__UserID__5070F446");
         });
 
         modelBuilder.Entity<Schedule>(entity =>
         {
-            entity.HasKey(e => e.ScheduleId).HasName("PK__Schedule__9C8A5B69AFE2E481");
+            entity.HasKey(e => e.ScheduleId).HasName("PK__Schedule__9C8A5B69CFB92730");
 
             entity.Property(e => e.ScheduleId).HasColumnName("ScheduleID");
             entity.Property(e => e.DayOfWeek).HasMaxLength(20);
@@ -72,12 +74,34 @@ public partial class QueuedbContext : DbContext
             entity.HasOne(d => d.Doctor).WithMany(p => p.Schedules)
                 .HasForeignKey(d => d.DoctorId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Schedules__Docto__30C33EC3");
+                .HasConstraintName("FK__Schedules__Docto__5535A963");
+        });
+
+        modelBuilder.Entity<Talon>(entity =>
+        {
+            entity.HasKey(e => e.TalonId).HasName("PK__Talon__E54CEA3FBF52AD11");
+
+            entity.ToTable("Talon");
+
+            entity.Property(e => e.TalonId).HasColumnName("TalonID");
+            entity.Property(e => e.OrderDate).HasColumnType("date");
+            entity.Property(e => e.PatientId).HasColumnName("PatientID");
+            entity.Property(e => e.ScheduleDayId).HasColumnName("ScheduleDayID");
+
+            entity.HasOne(d => d.Patient).WithMany(p => p.Talons)
+                .HasForeignKey(d => d.PatientId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Talon__PatientID__60A75C0F");
+
+            entity.HasOne(d => d.ScheduleDay).WithMany(p => p.Talons)
+                .HasForeignKey(d => d.ScheduleDayId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Talon__ScheduleD__619B8048");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCAC030FBD8B");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCACAECD75F8");
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.Email).HasMaxLength(100);

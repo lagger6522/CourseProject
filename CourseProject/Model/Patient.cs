@@ -19,5 +19,7 @@ public partial class Patient
 
     public string Gender { get; set; } = null!;
 
+    public virtual ICollection<Talon> Talons { get; set; } = new List<Talon>();
+
     public virtual User User { get; set; } = null!;
 }

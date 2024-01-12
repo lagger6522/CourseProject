@@ -65,7 +65,7 @@ export class DocAdd extends Component {
         })
             .then(response => {
                 if (response.message) {
-                    console.log('Doctor added successfully:', response);
+                    alert('Doctor added successfully:', response);
                 }
             })
             .catch(error => {

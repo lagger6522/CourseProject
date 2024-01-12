@@ -28,12 +28,13 @@ select * from Patients
 select * from Hospitals
 select * from Schedules
 
---CREATE TABLE Talon(
---	TalonID INT PRIMARY KEY IDENTITY(1,1),
---	PatientID INT NOT NULL FOREIGN KEY REFERENCES Patients(PatientID),
---	OrderTime TIME NOT NULL,
---	ScheduleDayID INT NOT NULL FOREIGN KEY REFERENCES Schedules(ScheduleID),
---);
+CREATE TABLE Talon(
+	TalonID INT PRIMARY KEY IDENTITY(1,1),
+	PatientID INT NOT NULL FOREIGN KEY REFERENCES Patients(PatientID),
+	OrderDate DATE NOT NULL,
+	OrderTime TIME NOT NULL,
+	ScheduleDayID INT NOT NULL FOREIGN KEY REFERENCES Schedules(ScheduleID),
+);
 
 -- Создание таблицы для больниц
 CREATE TABLE Hospitals (

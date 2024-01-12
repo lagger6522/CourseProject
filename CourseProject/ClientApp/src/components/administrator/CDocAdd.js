@@ -62,7 +62,15 @@ export class CDocAdd extends Component {
             this.setState({ errorMessage: 'Пароли не совпадают' });
             return;
         }
-
+        console.log({
+            email,
+            password,
+            confirmPassword,
+            firstName,
+            lastName,
+            middleName,
+            hospitalId: selectedHospital,
+        });
         sendRequest('/api/User/AddChiefDoctor', 'POST', {
             email,
             password,
@@ -70,7 +78,7 @@ export class CDocAdd extends Component {
             firstName,
             lastName,
             middleName,
-            hospitalID: selectedHospital,
+            hospitalId: selectedHospital,
         })
             .then((response) => {
                 if (response.message) {
@@ -90,7 +98,7 @@ export class CDocAdd extends Component {
 
     render() {
         const { email, password, confirmPassword, firstName, lastName, middleName, errorMessage, successMessage, selectedHospital, hospitals } = this.state;
-        console.log(selectedHospital);
+        console.log(hospitals);
         return (
             <div>
                 {successMessage && (
@@ -164,7 +172,7 @@ export class CDocAdd extends Component {
                             Выберите больницу
                         </option>
                         {hospitals.map((hospital) => (
-                            <option key={hospital.hospitalID} value={hospital.hospitalID}>
+                            <option key={hospital.hospitalId} value={hospital.hospitalId}>
                                 {hospital.clinicName}
                             </option>
                         ))}

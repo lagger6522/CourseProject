@@ -27,6 +27,7 @@ const AddPatientForm = () => {
         sendRequest('api/Patient/AddPatient', 'POST', formData)
             .then((data) => {
                 console.log('Patient added successfully:', data);
+                window.location.href = "/patients-list";
                 // Дополнительные действия, например, перенаправление пользователя или обновление состояния приложения
             })
             .catch((error) => {

@@ -146,7 +146,7 @@ namespace Store.controllers
 		[HttpPost]
 		public async Task<IActionResult> UpdateChiefDoctor([FromBody] ChiefDoctorUpdateModel model)
 		{
-			var existingDoctor = _context.Users.FirstOrDefault(u => u.Email == model.OriginalEmail && u.Role == "Chief Medical Officer");
+			var existingDoctor = model == null? null : _context.Users.FirstOrDefault(u => u.Email == model.OriginalEmail && u.Role == "Chief Medical Officer");
 
 			if (existingDoctor == null)
 			{
@@ -296,7 +296,7 @@ namespace Store.controllers
 		{
 			try
 			{
-				var hospital = _context.Hospitals.Find(model.HospitalId);
+				var hospital = model==null?null:_context.Hospitals.Find(model.HospitalId);
 				if (hospital == null)
 				{
 					return NotFound("Больница не найдена");

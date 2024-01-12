@@ -20,4 +20,6 @@ public partial class Schedule
     public TimeSpan? LunchBreakEnd { get; set; }
 
     public virtual User Doctor { get; set; } = null!;
+
+    public virtual ICollection<Talon> Talons { get; set; } = new List<Talon>();
 }

@@ -90,7 +90,7 @@ export class CDocAlt extends Component {
             lastName,
             middleName,
             email,
-            hospitalID: selectedHospital,
+            hospitalId: selectedHospital,
         };
 
         sendRequest('api/User/UpdateChiefDoctor', 'POST', requestData)
@@ -190,7 +190,7 @@ export class CDocAlt extends Component {
                         >
                             <option value="" disabled>Select a hospital</option>
                             {this.state.hospitals.map((hospital) => (
-                                <option key={hospital.hospitalID} value={hospital.hospitalID}>
+                                <option key={hospital.hospitalId} value={hospital.hospitalId}>
                                     {hospital.clinicName}
                                 </option>
                             ))}
