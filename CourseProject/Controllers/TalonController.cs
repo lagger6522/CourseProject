@@ -40,7 +40,7 @@ namespace CourseProject.Controllers
                     n.ScheduleDayId,
                     n.OrderDate,
                     n.OrderTime,
-                    Patient = k });
+                    Patient = k }).Where(n=>n.OrderDate > DateTime.Now.Date || n.OrderDate == DateTime.Now.Date && n.OrderTime > DateTime.Now.TimeOfDay);
                 return Json(new { data = talons });
             }
             else
@@ -52,7 +52,7 @@ namespace CourseProject.Controllers
                     n.OrderDate,
                     n.OrderTime,
                     Patient = k
-                }).Where(n => n.PatientId == patientId);
+                }).Where(n => n.PatientId == patientId && (n.OrderDate > DateTime.Now.Date || n.OrderDate == DateTime.Now.Date && n.OrderTime >= DateTime.Now.TimeOfDay));
                 return Json(new { data = talons });
             }
         }
@@ -62,6 +62,7 @@ namespace CourseProject.Controllers
         {
             var schedule = _context.Schedules.FirstOrDefault(n => n.DoctorId == docktorId && n.DayOfWeek == GetDayOfWeek(date));
             if (schedule == null) return Json(new object[] { });
+            if(DateTime.Now.Date > date.Date) return Json(new object[] { });
             List<TimeSpan> timeSpans = new List<TimeSpan>();
             var lunckEnd = schedule.LunchBreakStart == null || schedule.LunchBreakEnd == null ?
                  schedule.EndTime : schedule.LunchBreakEnd.Value;
@@ -74,6 +75,7 @@ namespace CourseProject.Controllers
             {
                 timeSpans.Add(time);
             }
+            if(DateTime.Now.Date==date.Date )timeSpans = timeSpans.Where(n=>n > DateTime.Now.TimeOfDay).ToList();
             var orderedTimes = _context.Talons.Where(n => n.ScheduleDayId == schedule.ScheduleId && n.OrderDate.Date == date.Date)
                 .Select(n=>n.OrderTime).ToList();
             return Json(
@@ -109,7 +111,7 @@ namespace CourseProject.Controllers
         {
             var talon = _context.Talons.FirstOrDefault(n => n.TalonId == talonId);
             if (talon == null) return Json(new { error = "Талон с данным id не существует" });
-            if (talon.OrderDate < DateTime.Now) return Json(new { error = "Талон уже истёк и не подлежит отмене" });
+            if (talon.OrderDate < DateTime.Now.Date ) return Json(new { error = "Талон уже истёк и не подлежит отмене" });
             _context.Talons.Remove(talon);
             _context.SaveChanges();
             return Json(new { message = $"Талон {talon.TalonId} успешно отменён" });
