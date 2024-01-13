@@ -55,9 +55,10 @@ export class NavMenu extends Component {
             .then(n => {
                 this.setState({
                     user: null,
+                    message: "Вы успешно вышли из аккаунта!"
                 })
+                window.location.reload();
                 sessionStorage.clear();
-                this.state.message = "Вы успешно вышли из аккаунта!"
             }).catch(e => console.error(e))
     }
 
